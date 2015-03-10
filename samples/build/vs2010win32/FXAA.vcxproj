@@ -128,11 +128,19 @@
 		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Default.frag">
 		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_DefaultES.frag">
+		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Extreme_Quality.frag">
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Extreme_QualityES.frag">
 		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Fastest.frag">
 		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_FastestES.frag">
+		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_High_Quality.frag">
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_High_QualityES.frag">
 		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Object.frag">
 		</None>

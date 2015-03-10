@@ -57,9 +57,11 @@ NormalBlendedDecal_debug_common_cflags    += -MMD
 NormalBlendedDecal_debug_common_cflags    += $(addprefix -D, $(NormalBlendedDecal_debug_defines))
 NormalBlendedDecal_debug_common_cflags    += $(addprefix -I, $(NormalBlendedDecal_debug_hpaths))
 NormalBlendedDecal_debug_cflags	:= $(NormalBlendedDecal_debug_common_cflags)
-NormalBlendedDecal_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NormalBlendedDecal_debug_cppflags	:= $(NormalBlendedDecal_debug_common_cflags)
-NormalBlendedDecal_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NormalBlendedDecal_debug_lflags    := $(NormalBlendedDecal_custom_lflags)
 NormalBlendedDecal_debug_lflags    += $(addprefix -L, $(NormalBlendedDecal_debug_lpaths))
 NormalBlendedDecal_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NormalBlendedDecal_debug_libraries)) -Wl,--end-group
@@ -72,9 +74,9 @@ NormalBlendedDecal_debug_obj      = $(NormalBlendedDecal_debug_cpp_o) $(NormalBl
 NormalBlendedDecal_debug_bin      := ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so
 
 clean_NormalBlendedDecal_debug: 
-	$(SILENT_FLAG)$(ECHO) clean NormalBlendedDecal debug
-	$(SILENT_FLAG)$(RMDIR) $(NormalBlendedDecal_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NormalBlendedDecal_debug_bin)
+	$(ECHO) clean NormalBlendedDecal debug
+	$(RMDIR) $(NormalBlendedDecal_debug_objsdir)
+	$(RMDIR) $(NormalBlendedDecal_debug_bin)
 
 build_NormalBlendedDecal_debug: postbuild_NormalBlendedDecal_debug
 postbuild_NormalBlendedDecal_debug: mainbuild_NormalBlendedDecal_debug preantbuild_NormalBlendedDecal_debug antbuild_NormalBlendedDecal_debug
@@ -85,37 +87,37 @@ mainbuild_NormalBlendedDecal_debug: prebuild_NormalBlendedDecal_debug $(NormalBl
 prebuild_NormalBlendedDecal_debug:
 
 $(NormalBlendedDecal_debug_bin): $(NormalBlendedDecal_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so`
-	$(SILENT_FLAG)$(CXX) -shared $(NormalBlendedDecal_debug_obj) $(NormalBlendedDecal_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so`
+	$(CXX) -shared $(NormalBlendedDecal_debug_obj) $(NormalBlendedDecal_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 NormalBlendedDecal_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NormalBlendedDecal_debug_cpp_o): $(NormalBlendedDecal_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NormalBlendedDecal_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).debug.P; \
+	$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NormalBlendedDecal_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))))
+	cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).debug.P; \
 	  rm -f $(NormalBlendedDecal_debug_DEPDIR).d
 
 $(NormalBlendedDecal_debug_cc_o): $(NormalBlendedDecal_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NormalBlendedDecal_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).debug.P; \
+	$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NormalBlendedDecal_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))))
+	cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).debug.P; \
 	  rm -f $(NormalBlendedDecal_debug_DEPDIR).d
 
 $(NormalBlendedDecal_debug_c_o): $(NormalBlendedDecal_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NormalBlendedDecal_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).debug.P; \
+	$(ECHO) NormalBlendedDecal: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NormalBlendedDecal_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))))
+	cp $(NormalBlendedDecal_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_debug_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).debug.P; \
 	  rm -f $(NormalBlendedDecal_debug_DEPDIR).d
@@ -164,9 +166,11 @@ NormalBlendedDecal_release_common_cflags    += -MMD
 NormalBlendedDecal_release_common_cflags    += $(addprefix -D, $(NormalBlendedDecal_release_defines))
 NormalBlendedDecal_release_common_cflags    += $(addprefix -I, $(NormalBlendedDecal_release_hpaths))
 NormalBlendedDecal_release_cflags	:= $(NormalBlendedDecal_release_common_cflags)
-NormalBlendedDecal_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NormalBlendedDecal_release_cppflags	:= $(NormalBlendedDecal_release_common_cflags)
-NormalBlendedDecal_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NormalBlendedDecal_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NormalBlendedDecal_release_lflags    := $(NormalBlendedDecal_custom_lflags)
 NormalBlendedDecal_release_lflags    += $(addprefix -L, $(NormalBlendedDecal_release_lpaths))
 NormalBlendedDecal_release_lflags    += -Wl,--start-group $(addprefix -l, $(NormalBlendedDecal_release_libraries)) -Wl,--end-group
@@ -179,9 +183,9 @@ NormalBlendedDecal_release_obj      = $(NormalBlendedDecal_release_cpp_o) $(Norm
 NormalBlendedDecal_release_bin      := ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so
 
 clean_NormalBlendedDecal_release: 
-	$(SILENT_FLAG)$(ECHO) clean NormalBlendedDecal release
-	$(SILENT_FLAG)$(RMDIR) $(NormalBlendedDecal_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NormalBlendedDecal_release_bin)
+	$(ECHO) clean NormalBlendedDecal release
+	$(RMDIR) $(NormalBlendedDecal_release_objsdir)
+	$(RMDIR) $(NormalBlendedDecal_release_bin)
 
 build_NormalBlendedDecal_release: postbuild_NormalBlendedDecal_release
 postbuild_NormalBlendedDecal_release: mainbuild_NormalBlendedDecal_release preantbuild_NormalBlendedDecal_release antbuild_NormalBlendedDecal_release
@@ -192,40 +196,45 @@ mainbuild_NormalBlendedDecal_release: prebuild_NormalBlendedDecal_release $(Norm
 prebuild_NormalBlendedDecal_release:
 
 $(NormalBlendedDecal_release_bin): $(NormalBlendedDecal_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so`
-	$(SILENT_FLAG)$(CXX) -shared $(NormalBlendedDecal_release_obj) $(NormalBlendedDecal_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/NormalBlendedDecal/libs/armeabi-v7a/libNormalBlendedDecal.so`
+	$(CXX) -shared $(NormalBlendedDecal_release_obj) $(NormalBlendedDecal_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 NormalBlendedDecal_release_DEPDIR = $(dir $(@))/$(*F)
 $(NormalBlendedDecal_release_cpp_o): $(NormalBlendedDecal_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NormalBlendedDecal_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).release.P; \
+	$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NormalBlendedDecal_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))))
+	cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cppfiles))))).release.P; \
 	  rm -f $(NormalBlendedDecal_release_DEPDIR).d
 
 $(NormalBlendedDecal_release_cc_o): $(NormalBlendedDecal_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NormalBlendedDecal_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).release.P; \
+	$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NormalBlendedDecal_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))))
+	cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_ccfiles))))).release.P; \
 	  rm -f $(NormalBlendedDecal_release_DEPDIR).d
 
 $(NormalBlendedDecal_release_c_o): $(NormalBlendedDecal_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NormalBlendedDecal_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))))
-	$(SILENT_FLAG)cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).release.P; \
+	$(ECHO) NormalBlendedDecal: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NormalBlendedDecal_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))))
+	cp $(NormalBlendedDecal_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NormalBlendedDecal_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NormalBlendedDecal_release_objsdir),, $@))), $(NormalBlendedDecal_cfiles))))).release.P; \
 	  rm -f $(NormalBlendedDecal_release_DEPDIR).d
 
 clean_NormalBlendedDecal:  clean_NormalBlendedDecal_debug clean_NormalBlendedDecal_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepad.h
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -57,6 +57,7 @@ public:
     const static uint32_t BUTTON_RIGHT_THUMB    = 0x00000080; ///< Mask for right thumbstick click
     const static uint32_t BUTTON_LEFT_SHOULDER  = 0x00000100; ///< Mask for left shoulder button (AKA L1)
     const static uint32_t BUTTON_RIGHT_SHOULDER = 0x00000200; ///< Mask for right shoulder button (AKA R1)
+    const static uint32_t BUTTON_PLAY_PAUSE     = 0x00000400; ///< Mask for a media play/pause button (AKA remotes)
     const static uint32_t BUTTON_CENTER         = 0x00000800; ///< Mask for center button (AKA X, NV, PS)
     const static uint32_t BUTTON_A              = 0x00001000; ///< Mask for A action button
     const static uint32_t BUTTON_B              = 0x00002000; ///< Mask for B action button

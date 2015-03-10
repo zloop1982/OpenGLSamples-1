@@ -57,9 +57,11 @@ PathRenderingBasic_debug_common_cflags    += -MMD
 PathRenderingBasic_debug_common_cflags    += $(addprefix -D, $(PathRenderingBasic_debug_defines))
 PathRenderingBasic_debug_common_cflags    += $(addprefix -I, $(PathRenderingBasic_debug_hpaths))
 PathRenderingBasic_debug_cflags	:= $(PathRenderingBasic_debug_common_cflags)
-PathRenderingBasic_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 PathRenderingBasic_debug_cppflags	:= $(PathRenderingBasic_debug_common_cflags)
-PathRenderingBasic_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 PathRenderingBasic_debug_lflags    := $(PathRenderingBasic_custom_lflags)
 PathRenderingBasic_debug_lflags    += $(addprefix -L, $(PathRenderingBasic_debug_lpaths))
 PathRenderingBasic_debug_lflags    += -Wl,--start-group $(addprefix -l, $(PathRenderingBasic_debug_libraries)) -Wl,--end-group
@@ -72,9 +74,9 @@ PathRenderingBasic_debug_obj      = $(PathRenderingBasic_debug_cpp_o) $(PathRend
 PathRenderingBasic_debug_bin      := ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so
 
 clean_PathRenderingBasic_debug: 
-	$(SILENT_FLAG)$(ECHO) clean PathRenderingBasic debug
-	$(SILENT_FLAG)$(RMDIR) $(PathRenderingBasic_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(PathRenderingBasic_debug_bin)
+	$(ECHO) clean PathRenderingBasic debug
+	$(RMDIR) $(PathRenderingBasic_debug_objsdir)
+	$(RMDIR) $(PathRenderingBasic_debug_bin)
 
 build_PathRenderingBasic_debug: postbuild_PathRenderingBasic_debug
 postbuild_PathRenderingBasic_debug: mainbuild_PathRenderingBasic_debug preantbuild_PathRenderingBasic_debug antbuild_PathRenderingBasic_debug
@@ -85,37 +87,37 @@ mainbuild_PathRenderingBasic_debug: prebuild_PathRenderingBasic_debug $(PathRend
 prebuild_PathRenderingBasic_debug:
 
 $(PathRenderingBasic_debug_bin): $(PathRenderingBasic_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so`
-	$(SILENT_FLAG)$(CXX) -shared $(PathRenderingBasic_debug_obj) $(PathRenderingBasic_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so`
+	$(CXX) -shared $(PathRenderingBasic_debug_obj) $(PathRenderingBasic_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 PathRenderingBasic_debug_DEPDIR = $(dir $(@))/$(*F)
 $(PathRenderingBasic_debug_cpp_o): $(PathRenderingBasic_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(PathRenderingBasic_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).debug.P; \
+	$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(PathRenderingBasic_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))))
+	cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).debug.P; \
 	  rm -f $(PathRenderingBasic_debug_DEPDIR).d
 
 $(PathRenderingBasic_debug_cc_o): $(PathRenderingBasic_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(PathRenderingBasic_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).debug.P; \
+	$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(PathRenderingBasic_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))))
+	cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).debug.P; \
 	  rm -f $(PathRenderingBasic_debug_DEPDIR).d
 
 $(PathRenderingBasic_debug_c_o): $(PathRenderingBasic_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(PathRenderingBasic_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).debug.P; \
+	$(ECHO) PathRenderingBasic: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(PathRenderingBasic_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))))))
+	cp $(PathRenderingBasic_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_debug_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).debug.P; \
 	  rm -f $(PathRenderingBasic_debug_DEPDIR).d
@@ -164,9 +166,11 @@ PathRenderingBasic_release_common_cflags    += -MMD
 PathRenderingBasic_release_common_cflags    += $(addprefix -D, $(PathRenderingBasic_release_defines))
 PathRenderingBasic_release_common_cflags    += $(addprefix -I, $(PathRenderingBasic_release_hpaths))
 PathRenderingBasic_release_cflags	:= $(PathRenderingBasic_release_common_cflags)
-PathRenderingBasic_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 PathRenderingBasic_release_cppflags	:= $(PathRenderingBasic_release_common_cflags)
-PathRenderingBasic_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+PathRenderingBasic_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 PathRenderingBasic_release_lflags    := $(PathRenderingBasic_custom_lflags)
 PathRenderingBasic_release_lflags    += $(addprefix -L, $(PathRenderingBasic_release_lpaths))
 PathRenderingBasic_release_lflags    += -Wl,--start-group $(addprefix -l, $(PathRenderingBasic_release_libraries)) -Wl,--end-group
@@ -179,9 +183,9 @@ PathRenderingBasic_release_obj      = $(PathRenderingBasic_release_cpp_o) $(Path
 PathRenderingBasic_release_bin      := ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so
 
 clean_PathRenderingBasic_release: 
-	$(SILENT_FLAG)$(ECHO) clean PathRenderingBasic release
-	$(SILENT_FLAG)$(RMDIR) $(PathRenderingBasic_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(PathRenderingBasic_release_bin)
+	$(ECHO) clean PathRenderingBasic release
+	$(RMDIR) $(PathRenderingBasic_release_objsdir)
+	$(RMDIR) $(PathRenderingBasic_release_bin)
 
 build_PathRenderingBasic_release: postbuild_PathRenderingBasic_release
 postbuild_PathRenderingBasic_release: mainbuild_PathRenderingBasic_release preantbuild_PathRenderingBasic_release antbuild_PathRenderingBasic_release
@@ -192,40 +196,45 @@ mainbuild_PathRenderingBasic_release: prebuild_PathRenderingBasic_release $(Path
 prebuild_PathRenderingBasic_release:
 
 $(PathRenderingBasic_release_bin): $(PathRenderingBasic_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so`
-	$(SILENT_FLAG)$(CXX) -shared $(PathRenderingBasic_release_obj) $(PathRenderingBasic_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/PathRenderingBasic/libs/armeabi-v7a/libPathRenderingBasic.so`
+	$(CXX) -shared $(PathRenderingBasic_release_obj) $(PathRenderingBasic_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 PathRenderingBasic_release_DEPDIR = $(dir $(@))/$(*F)
 $(PathRenderingBasic_release_cpp_o): $(PathRenderingBasic_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(PathRenderingBasic_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).release.P; \
+	$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(PathRenderingBasic_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))))
+	cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cppfiles))))).release.P; \
 	  rm -f $(PathRenderingBasic_release_DEPDIR).d
 
 $(PathRenderingBasic_release_cc_o): $(PathRenderingBasic_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(PathRenderingBasic_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).release.P; \
+	$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(PathRenderingBasic_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))))
+	cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_ccfiles))))).release.P; \
 	  rm -f $(PathRenderingBasic_release_DEPDIR).d
 
 $(PathRenderingBasic_release_c_o): $(PathRenderingBasic_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(PathRenderingBasic_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))))))
-	$(SILENT_FLAG)cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).release.P; \
+	$(ECHO) PathRenderingBasic: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(PathRenderingBasic_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))))))
+	cp $(PathRenderingBasic_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(PathRenderingBasic_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(PathRenderingBasic_release_objsdir),, $@))), $(PathRenderingBasic_cfiles))))).release.P; \
 	  rm -f $(PathRenderingBasic_release_DEPDIR).d
 
 clean_PathRenderingBasic:  clean_PathRenderingBasic_debug clean_PathRenderingBasic_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

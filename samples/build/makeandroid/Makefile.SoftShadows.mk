@@ -60,9 +60,11 @@ SoftShadows_debug_common_cflags    += -MMD
 SoftShadows_debug_common_cflags    += $(addprefix -D, $(SoftShadows_debug_defines))
 SoftShadows_debug_common_cflags    += $(addprefix -I, $(SoftShadows_debug_hpaths))
 SoftShadows_debug_cflags	:= $(SoftShadows_debug_common_cflags)
-SoftShadows_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 SoftShadows_debug_cppflags	:= $(SoftShadows_debug_common_cflags)
-SoftShadows_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 SoftShadows_debug_lflags    := $(SoftShadows_custom_lflags)
 SoftShadows_debug_lflags    += $(addprefix -L, $(SoftShadows_debug_lpaths))
 SoftShadows_debug_lflags    += -Wl,--start-group $(addprefix -l, $(SoftShadows_debug_libraries)) -Wl,--end-group
@@ -75,9 +77,9 @@ SoftShadows_debug_obj      = $(SoftShadows_debug_cpp_o) $(SoftShadows_debug_cc_o
 SoftShadows_debug_bin      := ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so
 
 clean_SoftShadows_debug: 
-	$(SILENT_FLAG)$(ECHO) clean SoftShadows debug
-	$(SILENT_FLAG)$(RMDIR) $(SoftShadows_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(SoftShadows_debug_bin)
+	$(ECHO) clean SoftShadows debug
+	$(RMDIR) $(SoftShadows_debug_objsdir)
+	$(RMDIR) $(SoftShadows_debug_bin)
 
 build_SoftShadows_debug: postbuild_SoftShadows_debug
 postbuild_SoftShadows_debug: mainbuild_SoftShadows_debug preantbuild_SoftShadows_debug antbuild_SoftShadows_debug
@@ -88,37 +90,37 @@ mainbuild_SoftShadows_debug: prebuild_SoftShadows_debug $(SoftShadows_debug_bin)
 prebuild_SoftShadows_debug:
 
 $(SoftShadows_debug_bin): $(SoftShadows_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so`
-	$(SILENT_FLAG)$(CXX) -shared $(SoftShadows_debug_obj) $(SoftShadows_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so`
+	$(CXX) -shared $(SoftShadows_debug_obj) $(SoftShadows_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 SoftShadows_debug_DEPDIR = $(dir $(@))/$(*F)
 $(SoftShadows_debug_cpp_o): $(SoftShadows_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SoftShadows_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))))).debug.P; \
+	$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SoftShadows_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))))))
+	cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cppfiles))))).debug.P; \
 	  rm -f $(SoftShadows_debug_DEPDIR).d
 
 $(SoftShadows_debug_cc_o): $(SoftShadows_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SoftShadows_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))))).debug.P; \
+	$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SoftShadows_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))))))
+	cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_ccfiles))))).debug.P; \
 	  rm -f $(SoftShadows_debug_DEPDIR).d
 
 $(SoftShadows_debug_c_o): $(SoftShadows_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(SoftShadows_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))))).debug.P; \
+	$(ECHO) SoftShadows: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(SoftShadows_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))))))
+	cp $(SoftShadows_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_debug_objsdir),, $@))), $(SoftShadows_cfiles))))).debug.P; \
 	  rm -f $(SoftShadows_debug_DEPDIR).d
@@ -166,9 +168,11 @@ SoftShadows_release_common_cflags    += -MMD
 SoftShadows_release_common_cflags    += $(addprefix -D, $(SoftShadows_release_defines))
 SoftShadows_release_common_cflags    += $(addprefix -I, $(SoftShadows_release_hpaths))
 SoftShadows_release_cflags	:= $(SoftShadows_release_common_cflags)
-SoftShadows_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 SoftShadows_release_cppflags	:= $(SoftShadows_release_common_cflags)
-SoftShadows_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+SoftShadows_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 SoftShadows_release_lflags    := $(SoftShadows_custom_lflags)
 SoftShadows_release_lflags    += $(addprefix -L, $(SoftShadows_release_lpaths))
 SoftShadows_release_lflags    += -Wl,--start-group $(addprefix -l, $(SoftShadows_release_libraries)) -Wl,--end-group
@@ -181,9 +185,9 @@ SoftShadows_release_obj      = $(SoftShadows_release_cpp_o) $(SoftShadows_releas
 SoftShadows_release_bin      := ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so
 
 clean_SoftShadows_release: 
-	$(SILENT_FLAG)$(ECHO) clean SoftShadows release
-	$(SILENT_FLAG)$(RMDIR) $(SoftShadows_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(SoftShadows_release_bin)
+	$(ECHO) clean SoftShadows release
+	$(RMDIR) $(SoftShadows_release_objsdir)
+	$(RMDIR) $(SoftShadows_release_bin)
 
 build_SoftShadows_release: postbuild_SoftShadows_release
 postbuild_SoftShadows_release: mainbuild_SoftShadows_release preantbuild_SoftShadows_release antbuild_SoftShadows_release
@@ -194,40 +198,45 @@ mainbuild_SoftShadows_release: prebuild_SoftShadows_release $(SoftShadows_releas
 prebuild_SoftShadows_release:
 
 $(SoftShadows_release_bin): $(SoftShadows_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so`
-	$(SILENT_FLAG)$(CXX) -shared $(SoftShadows_release_obj) $(SoftShadows_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/SoftShadows/libs/armeabi-v7a/libSoftShadows.so`
+	$(CXX) -shared $(SoftShadows_release_obj) $(SoftShadows_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 SoftShadows_release_DEPDIR = $(dir $(@))/$(*F)
 $(SoftShadows_release_cpp_o): $(SoftShadows_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SoftShadows_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))))).release.P; \
+	$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SoftShadows_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))))))
+	cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cppfiles))))).release.P; \
 	  rm -f $(SoftShadows_release_DEPDIR).d
 
 $(SoftShadows_release_cc_o): $(SoftShadows_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SoftShadows_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))))).release.P; \
+	$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SoftShadows_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))))))
+	cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_ccfiles))))).release.P; \
 	  rm -f $(SoftShadows_release_DEPDIR).d
 
 $(SoftShadows_release_c_o): $(SoftShadows_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(SoftShadows_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))))))
-	$(SILENT_FLAG)cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))))).release.P; \
+	$(ECHO) SoftShadows: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(SoftShadows_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))))))
+	cp $(SoftShadows_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SoftShadows_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SoftShadows_release_objsdir),, $@))), $(SoftShadows_cfiles))))).release.P; \
 	  rm -f $(SoftShadows_release_DEPDIR).d
 
 clean_SoftShadows:  clean_SoftShadows_debug clean_SoftShadows_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

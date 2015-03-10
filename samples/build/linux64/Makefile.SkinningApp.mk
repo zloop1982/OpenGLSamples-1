@@ -54,14 +54,14 @@ SkinningApp_debug_common_cflags    += $(addprefix -D, $(SkinningApp_debug_define
 SkinningApp_debug_common_cflags    += $(addprefix -I, $(SkinningApp_debug_hpaths))
 SkinningApp_debug_common_cflags  += -m64
 SkinningApp_debug_cflags	:= $(SkinningApp_debug_common_cflags)
-SkinningApp_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+SkinningApp_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 SkinningApp_debug_cflags  += -malign-double
-SkinningApp_debug_cflags  += -g
+SkinningApp_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 SkinningApp_debug_cppflags	:= $(SkinningApp_debug_common_cflags)
-SkinningApp_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+SkinningApp_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 SkinningApp_debug_cppflags  += -Wno-reorder
 SkinningApp_debug_cppflags  += -malign-double
-SkinningApp_debug_cppflags  += -g
+SkinningApp_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 SkinningApp_debug_lflags    := $(SkinningApp_custom_lflags)
 SkinningApp_debug_lflags    += $(addprefix -L, $(SkinningApp_debug_lpaths))
 SkinningApp_debug_lflags    += -Wl,--start-group $(addprefix -l, $(SkinningApp_debug_libraries)) -Wl,--end-group
@@ -76,9 +76,9 @@ SkinningApp_debug_obj      = $(SkinningApp_debug_cpp_o) $(SkinningApp_debug_cc_o
 SkinningApp_debug_bin      := ./../../bin/linux64/SkinningAppD
 
 clean_SkinningApp_debug: 
-	$(SILENT_FLAG)$(ECHO) clean SkinningApp debug
-	$(SILENT_FLAG)$(RMDIR) $(SkinningApp_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(SkinningApp_debug_bin)
+	$(ECHO) clean SkinningApp debug
+	$(RMDIR) $(SkinningApp_debug_objsdir)
+	$(RMDIR) $(SkinningApp_debug_bin)
 
 build_SkinningApp_debug: postbuild_SkinningApp_debug
 postbuild_SkinningApp_debug: mainbuild_SkinningApp_debug
@@ -86,37 +86,37 @@ mainbuild_SkinningApp_debug: prebuild_SkinningApp_debug $(SkinningApp_debug_bin)
 prebuild_SkinningApp_debug:
 
 $(SkinningApp_debug_bin): $(SkinningApp_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/SkinningAppD`
-	$(SILENT_FLAG)$(CCLD) $(SkinningApp_debug_obj) $(SkinningApp_debug_lflags) -o $(SkinningApp_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/SkinningAppD`
+	$(CCLD) $(SkinningApp_debug_obj) $(SkinningApp_debug_lflags) -o $(SkinningApp_debug_bin) 
+	$(ECHO) building $@ complete!
 
 SkinningApp_debug_DEPDIR = $(dir $(@))/$(*F)
 $(SkinningApp_debug_cpp_o): $(SkinningApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SkinningApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))))).debug.P; \
+	$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SkinningApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))))))
+	cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cppfiles))))).debug.P; \
 	  rm -f $(SkinningApp_debug_DEPDIR).d
 
 $(SkinningApp_debug_cc_o): $(SkinningApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SkinningApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))))).debug.P; \
+	$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SkinningApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))))))
+	cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_ccfiles))))).debug.P; \
 	  rm -f $(SkinningApp_debug_DEPDIR).d
 
 $(SkinningApp_debug_c_o): $(SkinningApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(SkinningApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))))).debug.P; \
+	$(ECHO) SkinningApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(SkinningApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))))))
+	cp $(SkinningApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_debug_objsdir),, $@))), $(SkinningApp_cfiles))))).debug.P; \
 	  rm -f $(SkinningApp_debug_DEPDIR).d
@@ -161,14 +161,14 @@ SkinningApp_release_common_cflags    += $(addprefix -D, $(SkinningApp_release_de
 SkinningApp_release_common_cflags    += $(addprefix -I, $(SkinningApp_release_hpaths))
 SkinningApp_release_common_cflags  += -m64
 SkinningApp_release_cflags	:= $(SkinningApp_release_common_cflags)
-SkinningApp_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+SkinningApp_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 SkinningApp_release_cflags  += -malign-double
-SkinningApp_release_cflags  += -O2
+SkinningApp_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 SkinningApp_release_cppflags	:= $(SkinningApp_release_common_cflags)
-SkinningApp_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+SkinningApp_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 SkinningApp_release_cppflags  += -Wno-reorder
 SkinningApp_release_cppflags  += -malign-double
-SkinningApp_release_cppflags  += -O2
+SkinningApp_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 SkinningApp_release_lflags    := $(SkinningApp_custom_lflags)
 SkinningApp_release_lflags    += $(addprefix -L, $(SkinningApp_release_lpaths))
 SkinningApp_release_lflags    += -Wl,--start-group $(addprefix -l, $(SkinningApp_release_libraries)) -Wl,--end-group
@@ -183,9 +183,9 @@ SkinningApp_release_obj      = $(SkinningApp_release_cpp_o) $(SkinningApp_releas
 SkinningApp_release_bin      := ./../../bin/linux64/SkinningApp
 
 clean_SkinningApp_release: 
-	$(SILENT_FLAG)$(ECHO) clean SkinningApp release
-	$(SILENT_FLAG)$(RMDIR) $(SkinningApp_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(SkinningApp_release_bin)
+	$(ECHO) clean SkinningApp release
+	$(RMDIR) $(SkinningApp_release_objsdir)
+	$(RMDIR) $(SkinningApp_release_bin)
 
 build_SkinningApp_release: postbuild_SkinningApp_release
 postbuild_SkinningApp_release: mainbuild_SkinningApp_release
@@ -193,40 +193,45 @@ mainbuild_SkinningApp_release: prebuild_SkinningApp_release $(SkinningApp_releas
 prebuild_SkinningApp_release:
 
 $(SkinningApp_release_bin): $(SkinningApp_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/SkinningApp`
-	$(SILENT_FLAG)$(CCLD) $(SkinningApp_release_obj) $(SkinningApp_release_lflags) -o $(SkinningApp_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/SkinningApp`
+	$(CCLD) $(SkinningApp_release_obj) $(SkinningApp_release_lflags) -o $(SkinningApp_release_bin) 
+	$(ECHO) building $@ complete!
 
 SkinningApp_release_DEPDIR = $(dir $(@))/$(*F)
 $(SkinningApp_release_cpp_o): $(SkinningApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SkinningApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))))).release.P; \
+	$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SkinningApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))))))
+	cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cppfiles))))).release.P; \
 	  rm -f $(SkinningApp_release_DEPDIR).d
 
 $(SkinningApp_release_cc_o): $(SkinningApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(SkinningApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))))).release.P; \
+	$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(SkinningApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))))))
+	cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_ccfiles))))).release.P; \
 	  rm -f $(SkinningApp_release_DEPDIR).d
 
 $(SkinningApp_release_c_o): $(SkinningApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(SkinningApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))))))
-	$(SILENT_FLAG)cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))))).release.P; \
+	$(ECHO) SkinningApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(SkinningApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))))))
+	cp $(SkinningApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(SkinningApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(SkinningApp_release_objsdir),, $@))), $(SkinningApp_cfiles))))).release.P; \
 	  rm -f $(SkinningApp_release_DEPDIR).d
 
 clean_SkinningApp:  clean_SkinningApp_debug clean_SkinningApp_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

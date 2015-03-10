@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainLinux.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -228,7 +228,11 @@ public:
     virtual const std::vector<std::string>& getCommandLine() { return m_commandLine; }
 
     virtual NvRedrawMode::Enum getRedrawMode() { return mRenderOnDemand ? NvRedrawMode::ON_DEMAND : NvRedrawMode::UNBOUNDED; }
-    virtual void setRedrawMode(NvRedrawMode::Enum mode) { mRenderOnDemand = (mode == NvRedrawMode::ON_DEMAND); }
+    virtual void setRedrawMode(NvRedrawMode::Enum mode) {
+        mRenderOnDemand = (mode == NvRedrawMode::ON_DEMAND);
+        if (mRenderOnDemand)
+            requestRedraw(); 
+    }
     virtual void requestRedraw() { mRenderRequested = true; }
 
     std::vector<std::string> m_commandLine;

@@ -36,9 +36,11 @@ NvModel_debug_common_cflags    += -MMD
 NvModel_debug_common_cflags    += $(addprefix -D, $(NvModel_debug_defines))
 NvModel_debug_common_cflags    += $(addprefix -I, $(NvModel_debug_hpaths))
 NvModel_debug_cflags	:= $(NvModel_debug_common_cflags)
-NvModel_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvModel_debug_cppflags	:= $(NvModel_debug_common_cflags)
-NvModel_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvModel_debug_lflags    := $(NvModel_custom_lflags)
 NvModel_debug_lflags    += $(addprefix -L, $(NvModel_debug_lpaths))
 NvModel_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NvModel_debug_libraries)) -Wl,--end-group
@@ -50,9 +52,9 @@ NvModel_debug_obj      = $(NvModel_debug_cpp_o) $(NvModel_debug_cc_o) $(NvModel_
 NvModel_debug_bin      := ./../../../extensions/lib/Tegra-Android/libNvModelD.a
 
 clean_NvModel_debug: 
-	$(SILENT_FLAG)$(ECHO) clean NvModel debug
-	$(SILENT_FLAG)$(RMDIR) $(NvModel_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvModel_debug_bin)
+	$(ECHO) clean NvModel debug
+	$(RMDIR) $(NvModel_debug_objsdir)
+	$(RMDIR) $(NvModel_debug_bin)
 
 build_NvModel_debug: postbuild_NvModel_debug
 postbuild_NvModel_debug: mainbuild_NvModel_debug
@@ -60,37 +62,37 @@ mainbuild_NvModel_debug: prebuild_NvModel_debug $(NvModel_debug_bin)
 prebuild_NvModel_debug:
 
 $(NvModel_debug_bin): $(NvModel_debug_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvModelD.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvModel_debug_bin) $(NvModel_debug_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvModelD.a`
+	$(AR) rcs $(NvModel_debug_bin) $(NvModel_debug_obj)
+	$(ECHO) building $@ complete!
 
 NvModel_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvModel_debug_cpp_o): $(NvModel_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvModel_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))))).debug.P; \
+	$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvModel_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))))))
+	cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cppfiles))))).debug.P; \
 	  rm -f $(NvModel_debug_DEPDIR).d
 
 $(NvModel_debug_cc_o): $(NvModel_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvModel_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))))).debug.P; \
+	$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvModel_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))))))
+	cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_ccfiles))))).debug.P; \
 	  rm -f $(NvModel_debug_DEPDIR).d
 
 $(NvModel_debug_c_o): $(NvModel_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvModel_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))))).debug.P; \
+	$(ECHO) NvModel: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvModel_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))))))
+	cp $(NvModel_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_debug_objsdir),, $@))), $(NvModel_cfiles))))).debug.P; \
 	  rm -f $(NvModel_debug_DEPDIR).d
@@ -114,9 +116,11 @@ NvModel_release_common_cflags    += -MMD
 NvModel_release_common_cflags    += $(addprefix -D, $(NvModel_release_defines))
 NvModel_release_common_cflags    += $(addprefix -I, $(NvModel_release_hpaths))
 NvModel_release_cflags	:= $(NvModel_release_common_cflags)
-NvModel_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvModel_release_cppflags	:= $(NvModel_release_common_cflags)
-NvModel_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvModel_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvModel_release_lflags    := $(NvModel_custom_lflags)
 NvModel_release_lflags    += $(addprefix -L, $(NvModel_release_lpaths))
 NvModel_release_lflags    += -Wl,--start-group $(addprefix -l, $(NvModel_release_libraries)) -Wl,--end-group
@@ -128,9 +132,9 @@ NvModel_release_obj      = $(NvModel_release_cpp_o) $(NvModel_release_cc_o) $(Nv
 NvModel_release_bin      := ./../../../extensions/lib/Tegra-Android/libNvModel.a
 
 clean_NvModel_release: 
-	$(SILENT_FLAG)$(ECHO) clean NvModel release
-	$(SILENT_FLAG)$(RMDIR) $(NvModel_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvModel_release_bin)
+	$(ECHO) clean NvModel release
+	$(RMDIR) $(NvModel_release_objsdir)
+	$(RMDIR) $(NvModel_release_bin)
 
 build_NvModel_release: postbuild_NvModel_release
 postbuild_NvModel_release: mainbuild_NvModel_release
@@ -138,40 +142,45 @@ mainbuild_NvModel_release: prebuild_NvModel_release $(NvModel_release_bin)
 prebuild_NvModel_release:
 
 $(NvModel_release_bin): $(NvModel_release_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvModel.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvModel_release_bin) $(NvModel_release_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvModel.a`
+	$(AR) rcs $(NvModel_release_bin) $(NvModel_release_obj)
+	$(ECHO) building $@ complete!
 
 NvModel_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvModel_release_cpp_o): $(NvModel_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvModel_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))))).release.P; \
+	$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvModel_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))))))
+	cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cppfiles))))).release.P; \
 	  rm -f $(NvModel_release_DEPDIR).d
 
 $(NvModel_release_cc_o): $(NvModel_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvModel_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))))).release.P; \
+	$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvModel_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))))))
+	cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_ccfiles))))).release.P; \
 	  rm -f $(NvModel_release_DEPDIR).d
 
 $(NvModel_release_c_o): $(NvModel_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvModel_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))))))
-	$(SILENT_FLAG)cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))))).release.P; \
+	$(ECHO) NvModel: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvModel_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))))))
+	cp $(NvModel_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvModel_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvModel_release_objsdir),, $@))), $(NvModel_cfiles))))).release.P; \
 	  rm -f $(NvModel_release_DEPDIR).d
 
 clean_NvModel:  clean_NvModel_debug clean_NvModel_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

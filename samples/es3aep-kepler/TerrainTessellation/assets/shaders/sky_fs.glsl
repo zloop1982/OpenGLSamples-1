@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        es3aep-kepler/TerrainTessellation/assets/shaders/sky_fs.glsl
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -45,9 +45,9 @@ in block {
 layout(location=0) out vec4 fragColor;
 
 const vec3 skyColor = vec3(0.7, 0.8, 1.0)*0.7;
-const vec3 fogColor = { 0.8, 0.8, 1.0 };
+const vec3 fogColor = vec3(0.8, 0.8, 1.0);
 const vec3 cloudColor = vec3(1.0);
-const vec3 sunColor = { 1.0, 1.0, 0.3 };
+const vec3 sunColor = vec3(1.0, 1.0, 0.3);
 const float skyHeight = 5.0;
 const float skyTop = 6.0;
 const int cloudSteps = 8;
@@ -60,7 +60,7 @@ vec4 cloudMap(vec3 p)
     d = smoothstep(0.2, 0.5, d);    // threshold density
 
     float c = smoothstep(skyHeight, skyTop, p.y)*0.5+0.5;    // darken base
-    return vec4(c.xxx, d*cloudDensity);
+    return vec4(c, c, c, d*cloudDensity);
 }
 
 vec4 rayMarchClouds(vec3 ro, vec3 rd, float stepsize)

@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        gl4-maxwell/CascadedShadowMapping/CascadedShadowMapping.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -85,7 +85,7 @@ void CascadedShadowMapping::initRendering(void) {
     glGetIntegerv(GL_DEPTH_BITS, &depthBits);
     LOGI("depth bits = %d\n", depthBits);
 
-    if (!requireMinAPIVersion(NvGfxAPIVersionGL4()))
+    if (!requireMinAPIVersion(NvGfxAPIVersionGL4_3()))
         return;
 
     if (!requireExtension("GL_NV_viewport_array2"))

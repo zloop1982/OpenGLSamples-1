@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        gl4-kepler/PathRenderingBasic/PathRenderingBasic.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -189,24 +189,25 @@ void PathRenderingBasic::initUI() {
         mTweakBar->addPadding();
         var = mTweakBar->addEnum("Path Definition Mode:", mPathDefMode, pathModes, TWEAKENUM_ARRAYSIZE(pathModes), REACT_PATH_MODE);
         addTweakKeyBind(var, NvKey::K_P);
-        addTweakButtonBind(var, NvGamepad::BUTTON_RIGHT_SHOULDER, NvGamepad::BUTTON_LEFT_SHOULDER);
+        addTweakButtonBind(var, NvGamepad::BUTTON_DPAD_RIGHT, NvGamepad::BUTTON_DPAD_LEFT);
 
         mTweakBar->addPadding();
         mTweakBar->addLabel("Drawing Options:");
 
         var = mTweakBar->addValue("Fill Paths", mOptFill);
         addTweakKeyBind(var, NvKey::K_F);
-        addTweakButtonBind(var, NvGamepad::BUTTON_Y);
+        addTweakButtonBind(var, NvGamepad::BUTTON_LEFT_SHOULDER);
 
         var = mTweakBar->addValue("Stroke Paths", mOptStroke);
         addTweakKeyBind(var, NvKey::K_S);
-        addTweakButtonBind(var, NvGamepad::BUTTON_X);
+        addTweakButtonBind(var, NvGamepad::BUTTON_RIGHT_SHOULDER);
 
         var = mTweakBar->addValue("Even-Odd Fill", mOptEvenOdd);
         addTweakKeyBind(var, NvKey::K_E);
+        addTweakButtonBind(var, NvGamepad::BUTTON_X);
 
         var = mTweakBar->addValue("Dashed Lines", mOptDashLines);
-        addTweakKeyBind(var, NvKey::K_D);
+        addTweakButtonBind(var, NvGamepad::BUTTON_Y);
     }
 }
 

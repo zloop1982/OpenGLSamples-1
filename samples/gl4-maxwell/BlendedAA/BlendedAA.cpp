@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        gl4-maxwell/BlendedAA/BlendedAA.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -255,7 +255,11 @@ void BlendedAA::initRendering(void) {
 
     NvAssetLoaderAddSearchPath("gl4-maxwell/BlendedAA");
 
+    if(!requireMinAPIVersion(NvGfxAPIVersionGL4_3())) return;
+
     if (!requireExtension("GL_EXT_raster_multisample")) return;
+
+    m_hasGPUMemInfo = requireExtension("GL_NVX_gpu_memory_info", false);
 
     m_transformer->setTranslationVec(nv::vec3f(0.0f, 0.0f, -3.0f));
     m_transformer->setRotationVec(nv::vec3f(NV_PI*0.15f, 0.0f, 0.0f));
@@ -510,14 +514,17 @@ void BlendedAA::draw(void)
     }
 
     // calculate GPU memory usage
-    GLint totalmem;
-    GLint available;
-    glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalmem);
-    glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &available);
+    GLint totalmem = 0;
+    GLint available = 0;
+    if (m_hasGPUMemInfo) {
+        glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &totalmem);
+        glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &available);
+    }
     m_memoryUsage->SetValue(static_cast<uint32_t>(totalmem - available));
 
     // for UI drawing, disable TIR mode
-    glDisable(GL_RASTER_MULTISAMPLE_EXT);
+    if (m_AAType == 2)
+        glDisable(GL_RASTER_MULTISAMPLE_EXT);
     return;
 }
 

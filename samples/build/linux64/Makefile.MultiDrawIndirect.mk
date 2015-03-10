@@ -53,14 +53,14 @@ MultiDrawIndirect_debug_common_cflags    += $(addprefix -D, $(MultiDrawIndirect_
 MultiDrawIndirect_debug_common_cflags    += $(addprefix -I, $(MultiDrawIndirect_debug_hpaths))
 MultiDrawIndirect_debug_common_cflags  += -m64
 MultiDrawIndirect_debug_cflags	:= $(MultiDrawIndirect_debug_common_cflags)
-MultiDrawIndirect_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MultiDrawIndirect_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MultiDrawIndirect_debug_cflags  += -malign-double
-MultiDrawIndirect_debug_cflags  += -g
+MultiDrawIndirect_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 MultiDrawIndirect_debug_cppflags	:= $(MultiDrawIndirect_debug_common_cflags)
-MultiDrawIndirect_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MultiDrawIndirect_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MultiDrawIndirect_debug_cppflags  += -Wno-reorder
 MultiDrawIndirect_debug_cppflags  += -malign-double
-MultiDrawIndirect_debug_cppflags  += -g
+MultiDrawIndirect_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 MultiDrawIndirect_debug_lflags    := $(MultiDrawIndirect_custom_lflags)
 MultiDrawIndirect_debug_lflags    += $(addprefix -L, $(MultiDrawIndirect_debug_lpaths))
 MultiDrawIndirect_debug_lflags    += -Wl,--start-group $(addprefix -l, $(MultiDrawIndirect_debug_libraries)) -Wl,--end-group
@@ -75,9 +75,9 @@ MultiDrawIndirect_debug_obj      = $(MultiDrawIndirect_debug_cpp_o) $(MultiDrawI
 MultiDrawIndirect_debug_bin      := ./../../bin/linux64/MultiDrawIndirectD
 
 clean_MultiDrawIndirect_debug: 
-	$(SILENT_FLAG)$(ECHO) clean MultiDrawIndirect debug
-	$(SILENT_FLAG)$(RMDIR) $(MultiDrawIndirect_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(MultiDrawIndirect_debug_bin)
+	$(ECHO) clean MultiDrawIndirect debug
+	$(RMDIR) $(MultiDrawIndirect_debug_objsdir)
+	$(RMDIR) $(MultiDrawIndirect_debug_bin)
 
 build_MultiDrawIndirect_debug: postbuild_MultiDrawIndirect_debug
 postbuild_MultiDrawIndirect_debug: mainbuild_MultiDrawIndirect_debug
@@ -85,37 +85,37 @@ mainbuild_MultiDrawIndirect_debug: prebuild_MultiDrawIndirect_debug $(MultiDrawI
 prebuild_MultiDrawIndirect_debug:
 
 $(MultiDrawIndirect_debug_bin): $(MultiDrawIndirect_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/MultiDrawIndirectD`
-	$(SILENT_FLAG)$(CCLD) $(MultiDrawIndirect_debug_obj) $(MultiDrawIndirect_debug_lflags) -o $(MultiDrawIndirect_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/MultiDrawIndirectD`
+	$(CCLD) $(MultiDrawIndirect_debug_obj) $(MultiDrawIndirect_debug_lflags) -o $(MultiDrawIndirect_debug_bin) 
+	$(ECHO) building $@ complete!
 
 MultiDrawIndirect_debug_DEPDIR = $(dir $(@))/$(*F)
 $(MultiDrawIndirect_debug_cpp_o): $(MultiDrawIndirect_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MultiDrawIndirect_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).debug.P; \
+	$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MultiDrawIndirect_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))))
+	cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).debug.P; \
 	  rm -f $(MultiDrawIndirect_debug_DEPDIR).d
 
 $(MultiDrawIndirect_debug_cc_o): $(MultiDrawIndirect_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MultiDrawIndirect_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).debug.P; \
+	$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MultiDrawIndirect_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))))
+	cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).debug.P; \
 	  rm -f $(MultiDrawIndirect_debug_DEPDIR).d
 
 $(MultiDrawIndirect_debug_c_o): $(MultiDrawIndirect_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(MultiDrawIndirect_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).debug.P; \
+	$(ECHO) MultiDrawIndirect: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(MultiDrawIndirect_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))))
+	cp $(MultiDrawIndirect_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_debug_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).debug.P; \
 	  rm -f $(MultiDrawIndirect_debug_DEPDIR).d
@@ -160,14 +160,14 @@ MultiDrawIndirect_release_common_cflags    += $(addprefix -D, $(MultiDrawIndirec
 MultiDrawIndirect_release_common_cflags    += $(addprefix -I, $(MultiDrawIndirect_release_hpaths))
 MultiDrawIndirect_release_common_cflags  += -m64
 MultiDrawIndirect_release_cflags	:= $(MultiDrawIndirect_release_common_cflags)
-MultiDrawIndirect_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MultiDrawIndirect_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MultiDrawIndirect_release_cflags  += -malign-double
-MultiDrawIndirect_release_cflags  += -O2
+MultiDrawIndirect_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 MultiDrawIndirect_release_cppflags	:= $(MultiDrawIndirect_release_common_cflags)
-MultiDrawIndirect_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MultiDrawIndirect_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MultiDrawIndirect_release_cppflags  += -Wno-reorder
 MultiDrawIndirect_release_cppflags  += -malign-double
-MultiDrawIndirect_release_cppflags  += -O2
+MultiDrawIndirect_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 MultiDrawIndirect_release_lflags    := $(MultiDrawIndirect_custom_lflags)
 MultiDrawIndirect_release_lflags    += $(addprefix -L, $(MultiDrawIndirect_release_lpaths))
 MultiDrawIndirect_release_lflags    += -Wl,--start-group $(addprefix -l, $(MultiDrawIndirect_release_libraries)) -Wl,--end-group
@@ -182,9 +182,9 @@ MultiDrawIndirect_release_obj      = $(MultiDrawIndirect_release_cpp_o) $(MultiD
 MultiDrawIndirect_release_bin      := ./../../bin/linux64/MultiDrawIndirect
 
 clean_MultiDrawIndirect_release: 
-	$(SILENT_FLAG)$(ECHO) clean MultiDrawIndirect release
-	$(SILENT_FLAG)$(RMDIR) $(MultiDrawIndirect_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(MultiDrawIndirect_release_bin)
+	$(ECHO) clean MultiDrawIndirect release
+	$(RMDIR) $(MultiDrawIndirect_release_objsdir)
+	$(RMDIR) $(MultiDrawIndirect_release_bin)
 
 build_MultiDrawIndirect_release: postbuild_MultiDrawIndirect_release
 postbuild_MultiDrawIndirect_release: mainbuild_MultiDrawIndirect_release
@@ -192,40 +192,45 @@ mainbuild_MultiDrawIndirect_release: prebuild_MultiDrawIndirect_release $(MultiD
 prebuild_MultiDrawIndirect_release:
 
 $(MultiDrawIndirect_release_bin): $(MultiDrawIndirect_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/MultiDrawIndirect`
-	$(SILENT_FLAG)$(CCLD) $(MultiDrawIndirect_release_obj) $(MultiDrawIndirect_release_lflags) -o $(MultiDrawIndirect_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/MultiDrawIndirect`
+	$(CCLD) $(MultiDrawIndirect_release_obj) $(MultiDrawIndirect_release_lflags) -o $(MultiDrawIndirect_release_bin) 
+	$(ECHO) building $@ complete!
 
 MultiDrawIndirect_release_DEPDIR = $(dir $(@))/$(*F)
 $(MultiDrawIndirect_release_cpp_o): $(MultiDrawIndirect_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MultiDrawIndirect_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).release.P; \
+	$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MultiDrawIndirect_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))))
+	cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cppfiles))))).release.P; \
 	  rm -f $(MultiDrawIndirect_release_DEPDIR).d
 
 $(MultiDrawIndirect_release_cc_o): $(MultiDrawIndirect_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MultiDrawIndirect_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).release.P; \
+	$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MultiDrawIndirect_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))))
+	cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_ccfiles))))).release.P; \
 	  rm -f $(MultiDrawIndirect_release_DEPDIR).d
 
 $(MultiDrawIndirect_release_c_o): $(MultiDrawIndirect_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(MultiDrawIndirect_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))))
-	$(SILENT_FLAG)cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).release.P; \
+	$(ECHO) MultiDrawIndirect: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(MultiDrawIndirect_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))))
+	cp $(MultiDrawIndirect_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MultiDrawIndirect_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MultiDrawIndirect_release_objsdir),, $@))), $(MultiDrawIndirect_cfiles))))).release.P; \
 	  rm -f $(MultiDrawIndirect_release_DEPDIR).d
 
 clean_MultiDrawIndirect:  clean_MultiDrawIndirect_debug clean_MultiDrawIndirect_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

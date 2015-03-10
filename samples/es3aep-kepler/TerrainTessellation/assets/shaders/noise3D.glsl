@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        es3aep-kepler/TerrainTessellation/assets/shaders/noise3D.glsl
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -84,7 +84,7 @@ float turbulence(vec3 p, int octaves=4, float lacunarity = 2.0, float gain = 0.5
     float amp = 0.5;
     float sum = 0.0;
     for(int i=0; i<octaves; i++) {
-        sum += abs(noise(p).x)*amp;
+        sum += abs(noise(p))*amp;
         //p = rotateMat * p;
         p *= lacunarity;
         amp *= gain;

@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/MainAndroid.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -156,7 +156,7 @@ static bool localEGLChooser(EGLDisplay disp, EGLint apiSupport, EGLConfig& bestC
     }
 
     int32_t matchRenderableFlags = (sDefaultConfig.apiVer.api == NvGfxAPI::GL)
-        ? EGL_OPENGL_BIT : EGL_OPENGL_ES_BIT;
+        ? EGL_OPENGL_BIT : EGL_OPENGL_ES2_BIT;
 
     int32_t bestMatch = 1<<30;
     int32_t bestIndex = -1;

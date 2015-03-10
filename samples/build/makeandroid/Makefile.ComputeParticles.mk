@@ -59,9 +59,11 @@ ComputeParticles_debug_common_cflags    += -MMD
 ComputeParticles_debug_common_cflags    += $(addprefix -D, $(ComputeParticles_debug_defines))
 ComputeParticles_debug_common_cflags    += $(addprefix -I, $(ComputeParticles_debug_hpaths))
 ComputeParticles_debug_cflags	:= $(ComputeParticles_debug_common_cflags)
-ComputeParticles_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeParticles_debug_cppflags	:= $(ComputeParticles_debug_common_cflags)
-ComputeParticles_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeParticles_debug_lflags    := $(ComputeParticles_custom_lflags)
 ComputeParticles_debug_lflags    += $(addprefix -L, $(ComputeParticles_debug_lpaths))
 ComputeParticles_debug_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeParticles_debug_libraries)) -Wl,--end-group
@@ -74,9 +76,9 @@ ComputeParticles_debug_obj      = $(ComputeParticles_debug_cpp_o) $(ComputeParti
 ComputeParticles_debug_bin      := ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so
 
 clean_ComputeParticles_debug: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeParticles debug
-	$(SILENT_FLAG)$(RMDIR) $(ComputeParticles_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeParticles_debug_bin)
+	$(ECHO) clean ComputeParticles debug
+	$(RMDIR) $(ComputeParticles_debug_objsdir)
+	$(RMDIR) $(ComputeParticles_debug_bin)
 
 build_ComputeParticles_debug: postbuild_ComputeParticles_debug
 postbuild_ComputeParticles_debug: mainbuild_ComputeParticles_debug preantbuild_ComputeParticles_debug antbuild_ComputeParticles_debug
@@ -87,37 +89,37 @@ mainbuild_ComputeParticles_debug: prebuild_ComputeParticles_debug $(ComputeParti
 prebuild_ComputeParticles_debug:
 
 $(ComputeParticles_debug_bin): $(ComputeParticles_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so`
-	$(SILENT_FLAG)$(CXX) -shared $(ComputeParticles_debug_obj) $(ComputeParticles_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so`
+	$(CXX) -shared $(ComputeParticles_debug_obj) $(ComputeParticles_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 ComputeParticles_debug_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeParticles_debug_cpp_o): $(ComputeParticles_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeParticles_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))))).debug.P; \
+	$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeParticles_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))))))
+	cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cppfiles))))).debug.P; \
 	  rm -f $(ComputeParticles_debug_DEPDIR).d
 
 $(ComputeParticles_debug_cc_o): $(ComputeParticles_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeParticles_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))))).debug.P; \
+	$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeParticles_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))))))
+	cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_ccfiles))))).debug.P; \
 	  rm -f $(ComputeParticles_debug_DEPDIR).d
 
 $(ComputeParticles_debug_c_o): $(ComputeParticles_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeParticles_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))))).debug.P; \
+	$(ECHO) ComputeParticles: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeParticles_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))))))
+	cp $(ComputeParticles_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_debug_objsdir),, $@))), $(ComputeParticles_cfiles))))).debug.P; \
 	  rm -f $(ComputeParticles_debug_DEPDIR).d
@@ -166,9 +168,11 @@ ComputeParticles_release_common_cflags    += -MMD
 ComputeParticles_release_common_cflags    += $(addprefix -D, $(ComputeParticles_release_defines))
 ComputeParticles_release_common_cflags    += $(addprefix -I, $(ComputeParticles_release_hpaths))
 ComputeParticles_release_cflags	:= $(ComputeParticles_release_common_cflags)
-ComputeParticles_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeParticles_release_cppflags	:= $(ComputeParticles_release_common_cflags)
-ComputeParticles_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeParticles_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeParticles_release_lflags    := $(ComputeParticles_custom_lflags)
 ComputeParticles_release_lflags    += $(addprefix -L, $(ComputeParticles_release_lpaths))
 ComputeParticles_release_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeParticles_release_libraries)) -Wl,--end-group
@@ -181,9 +185,9 @@ ComputeParticles_release_obj      = $(ComputeParticles_release_cpp_o) $(ComputeP
 ComputeParticles_release_bin      := ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so
 
 clean_ComputeParticles_release: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeParticles release
-	$(SILENT_FLAG)$(RMDIR) $(ComputeParticles_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeParticles_release_bin)
+	$(ECHO) clean ComputeParticles release
+	$(RMDIR) $(ComputeParticles_release_objsdir)
+	$(RMDIR) $(ComputeParticles_release_bin)
 
 build_ComputeParticles_release: postbuild_ComputeParticles_release
 postbuild_ComputeParticles_release: mainbuild_ComputeParticles_release preantbuild_ComputeParticles_release antbuild_ComputeParticles_release
@@ -194,40 +198,45 @@ mainbuild_ComputeParticles_release: prebuild_ComputeParticles_release $(ComputeP
 prebuild_ComputeParticles_release:
 
 $(ComputeParticles_release_bin): $(ComputeParticles_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so`
-	$(SILENT_FLAG)$(CXX) -shared $(ComputeParticles_release_obj) $(ComputeParticles_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/ComputeParticles/libs/armeabi-v7a/libComputeParticles.so`
+	$(CXX) -shared $(ComputeParticles_release_obj) $(ComputeParticles_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 ComputeParticles_release_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeParticles_release_cpp_o): $(ComputeParticles_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeParticles_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))))).release.P; \
+	$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeParticles_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))))))
+	cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cppfiles))))).release.P; \
 	  rm -f $(ComputeParticles_release_DEPDIR).d
 
 $(ComputeParticles_release_cc_o): $(ComputeParticles_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeParticles_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))))).release.P; \
+	$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeParticles_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))))))
+	cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_ccfiles))))).release.P; \
 	  rm -f $(ComputeParticles_release_DEPDIR).d
 
 $(ComputeParticles_release_c_o): $(ComputeParticles_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeParticles_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))))).release.P; \
+	$(ECHO) ComputeParticles: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeParticles_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))))))
+	cp $(ComputeParticles_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeParticles_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeParticles_release_objsdir),, $@))), $(ComputeParticles_cfiles))))).release.P; \
 	  rm -f $(ComputeParticles_release_DEPDIR).d
 
 clean_ComputeParticles:  clean_ComputeParticles_debug clean_ComputeParticles_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

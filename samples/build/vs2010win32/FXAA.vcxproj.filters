@@ -29,13 +29,25 @@
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Default.frag">
 			<Filter>shaders</Filter>
 		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_DefaultES.frag">
+			<Filter>shaders</Filter>
+		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Extreme_Quality.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Extreme_QualityES.frag">
 			<Filter>shaders</Filter>
 		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_Fastest.frag">
 			<Filter>shaders</Filter>
 		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_FastestES.frag">
+			<Filter>shaders</Filter>
+		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_High_Quality.frag">
+			<Filter>shaders</Filter>
+		</None>
+		<None Include="..\..\es3-kepler\FXAA\assets\shaders\FXAA_High_QualityES.frag">
 			<Filter>shaders</Filter>
 		</None>
 		<None Include="..\..\es3-kepler\FXAA\assets\shaders\Object.frag">

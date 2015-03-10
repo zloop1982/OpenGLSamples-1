@@ -60,10 +60,12 @@ CascadedShadowMapping_debug_common_cflags    += $(addprefix -D, $(CascadedShadow
 CascadedShadowMapping_debug_common_cflags    += $(addprefix -I, $(CascadedShadowMapping_debug_hpaths))
 CascadedShadowMapping_debug_cflags	:= $(CascadedShadowMapping_debug_common_cflags)
 CascadedShadowMapping_debug_cflags  += -std="gnu++11"
-CascadedShadowMapping_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 CascadedShadowMapping_debug_cppflags	:= $(CascadedShadowMapping_debug_common_cflags)
 CascadedShadowMapping_debug_cppflags  += -std="gnu++11"
-CascadedShadowMapping_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 CascadedShadowMapping_debug_lflags    := $(CascadedShadowMapping_custom_lflags)
 CascadedShadowMapping_debug_lflags    += $(addprefix -L, $(CascadedShadowMapping_debug_lpaths))
 CascadedShadowMapping_debug_lflags    += -Wl,--start-group $(addprefix -l, $(CascadedShadowMapping_debug_libraries)) -Wl,--end-group
@@ -76,9 +78,9 @@ CascadedShadowMapping_debug_obj      = $(CascadedShadowMapping_debug_cpp_o) $(Ca
 CascadedShadowMapping_debug_bin      := ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so
 
 clean_CascadedShadowMapping_debug: 
-	$(SILENT_FLAG)$(ECHO) clean CascadedShadowMapping debug
-	$(SILENT_FLAG)$(RMDIR) $(CascadedShadowMapping_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(CascadedShadowMapping_debug_bin)
+	$(ECHO) clean CascadedShadowMapping debug
+	$(RMDIR) $(CascadedShadowMapping_debug_objsdir)
+	$(RMDIR) $(CascadedShadowMapping_debug_bin)
 
 build_CascadedShadowMapping_debug: postbuild_CascadedShadowMapping_debug
 postbuild_CascadedShadowMapping_debug: mainbuild_CascadedShadowMapping_debug preantbuild_CascadedShadowMapping_debug antbuild_CascadedShadowMapping_debug
@@ -89,37 +91,37 @@ mainbuild_CascadedShadowMapping_debug: prebuild_CascadedShadowMapping_debug $(Ca
 prebuild_CascadedShadowMapping_debug:
 
 $(CascadedShadowMapping_debug_bin): $(CascadedShadowMapping_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so`
-	$(SILENT_FLAG)$(CXX) -shared $(CascadedShadowMapping_debug_obj) $(CascadedShadowMapping_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so`
+	$(CXX) -shared $(CascadedShadowMapping_debug_obj) $(CascadedShadowMapping_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 CascadedShadowMapping_debug_DEPDIR = $(dir $(@))/$(*F)
 $(CascadedShadowMapping_debug_cpp_o): $(CascadedShadowMapping_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(CascadedShadowMapping_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).debug.P; \
+	$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(CascadedShadowMapping_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))))
+	cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).debug.P; \
 	  rm -f $(CascadedShadowMapping_debug_DEPDIR).d
 
 $(CascadedShadowMapping_debug_cc_o): $(CascadedShadowMapping_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(CascadedShadowMapping_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).debug.P; \
+	$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(CascadedShadowMapping_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))))
+	cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).debug.P; \
 	  rm -f $(CascadedShadowMapping_debug_DEPDIR).d
 
 $(CascadedShadowMapping_debug_c_o): $(CascadedShadowMapping_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(CascadedShadowMapping_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).debug.P; \
+	$(ECHO) CascadedShadowMapping: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(CascadedShadowMapping_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))))
+	cp $(CascadedShadowMapping_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_debug_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).debug.P; \
 	  rm -f $(CascadedShadowMapping_debug_DEPDIR).d
@@ -169,10 +171,12 @@ CascadedShadowMapping_release_common_cflags    += $(addprefix -D, $(CascadedShad
 CascadedShadowMapping_release_common_cflags    += $(addprefix -I, $(CascadedShadowMapping_release_hpaths))
 CascadedShadowMapping_release_cflags	:= $(CascadedShadowMapping_release_common_cflags)
 CascadedShadowMapping_release_cflags  += -std="gnu++11"
-CascadedShadowMapping_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 CascadedShadowMapping_release_cppflags	:= $(CascadedShadowMapping_release_common_cflags)
 CascadedShadowMapping_release_cppflags  += -std="gnu++11"
-CascadedShadowMapping_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+CascadedShadowMapping_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 CascadedShadowMapping_release_lflags    := $(CascadedShadowMapping_custom_lflags)
 CascadedShadowMapping_release_lflags    += $(addprefix -L, $(CascadedShadowMapping_release_lpaths))
 CascadedShadowMapping_release_lflags    += -Wl,--start-group $(addprefix -l, $(CascadedShadowMapping_release_libraries)) -Wl,--end-group
@@ -185,9 +189,9 @@ CascadedShadowMapping_release_obj      = $(CascadedShadowMapping_release_cpp_o) 
 CascadedShadowMapping_release_bin      := ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so
 
 clean_CascadedShadowMapping_release: 
-	$(SILENT_FLAG)$(ECHO) clean CascadedShadowMapping release
-	$(SILENT_FLAG)$(RMDIR) $(CascadedShadowMapping_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(CascadedShadowMapping_release_bin)
+	$(ECHO) clean CascadedShadowMapping release
+	$(RMDIR) $(CascadedShadowMapping_release_objsdir)
+	$(RMDIR) $(CascadedShadowMapping_release_bin)
 
 build_CascadedShadowMapping_release: postbuild_CascadedShadowMapping_release
 postbuild_CascadedShadowMapping_release: mainbuild_CascadedShadowMapping_release preantbuild_CascadedShadowMapping_release antbuild_CascadedShadowMapping_release
@@ -198,40 +202,45 @@ mainbuild_CascadedShadowMapping_release: prebuild_CascadedShadowMapping_release 
 prebuild_CascadedShadowMapping_release:
 
 $(CascadedShadowMapping_release_bin): $(CascadedShadowMapping_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so`
-	$(SILENT_FLAG)$(CXX) -shared $(CascadedShadowMapping_release_obj) $(CascadedShadowMapping_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/CascadedShadowMapping/libs/armeabi-v7a/libCascadedShadowMapping.so`
+	$(CXX) -shared $(CascadedShadowMapping_release_obj) $(CascadedShadowMapping_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 CascadedShadowMapping_release_DEPDIR = $(dir $(@))/$(*F)
 $(CascadedShadowMapping_release_cpp_o): $(CascadedShadowMapping_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(CascadedShadowMapping_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).release.P; \
+	$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(CascadedShadowMapping_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))))
+	cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cppfiles))))).release.P; \
 	  rm -f $(CascadedShadowMapping_release_DEPDIR).d
 
 $(CascadedShadowMapping_release_cc_o): $(CascadedShadowMapping_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(CascadedShadowMapping_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).release.P; \
+	$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(CascadedShadowMapping_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))))
+	cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_ccfiles))))).release.P; \
 	  rm -f $(CascadedShadowMapping_release_DEPDIR).d
 
 $(CascadedShadowMapping_release_c_o): $(CascadedShadowMapping_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(CascadedShadowMapping_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))))
-	$(SILENT_FLAG)cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).release.P; \
+	$(ECHO) CascadedShadowMapping: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(CascadedShadowMapping_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))))
+	cp $(CascadedShadowMapping_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(CascadedShadowMapping_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(CascadedShadowMapping_release_objsdir),, $@))), $(CascadedShadowMapping_cfiles))))).release.P; \
 	  rm -f $(CascadedShadowMapping_release_DEPDIR).d
 
 clean_CascadedShadowMapping:  clean_CascadedShadowMapping_debug clean_CascadedShadowMapping_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

@@ -39,9 +39,11 @@ NvGLUtils_debug_common_cflags    += -MMD
 NvGLUtils_debug_common_cflags    += $(addprefix -D, $(NvGLUtils_debug_defines))
 NvGLUtils_debug_common_cflags    += $(addprefix -I, $(NvGLUtils_debug_hpaths))
 NvGLUtils_debug_cflags	:= $(NvGLUtils_debug_common_cflags)
-NvGLUtils_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvGLUtils_debug_cppflags	:= $(NvGLUtils_debug_common_cflags)
-NvGLUtils_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvGLUtils_debug_lflags    := $(NvGLUtils_custom_lflags)
 NvGLUtils_debug_lflags    += $(addprefix -L, $(NvGLUtils_debug_lpaths))
 NvGLUtils_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NvGLUtils_debug_libraries)) -Wl,--end-group
@@ -53,9 +55,9 @@ NvGLUtils_debug_obj      = $(NvGLUtils_debug_cpp_o) $(NvGLUtils_debug_cc_o) $(Nv
 NvGLUtils_debug_bin      := ./../../../extensions/lib/Tegra-Android/libNvGLUtilsD.a
 
 clean_NvGLUtils_debug: 
-	$(SILENT_FLAG)$(ECHO) clean NvGLUtils debug
-	$(SILENT_FLAG)$(RMDIR) $(NvGLUtils_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvGLUtils_debug_bin)
+	$(ECHO) clean NvGLUtils debug
+	$(RMDIR) $(NvGLUtils_debug_objsdir)
+	$(RMDIR) $(NvGLUtils_debug_bin)
 
 build_NvGLUtils_debug: postbuild_NvGLUtils_debug
 postbuild_NvGLUtils_debug: mainbuild_NvGLUtils_debug
@@ -63,37 +65,37 @@ mainbuild_NvGLUtils_debug: prebuild_NvGLUtils_debug $(NvGLUtils_debug_bin)
 prebuild_NvGLUtils_debug:
 
 $(NvGLUtils_debug_bin): $(NvGLUtils_debug_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvGLUtilsD.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvGLUtils_debug_bin) $(NvGLUtils_debug_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvGLUtilsD.a`
+	$(AR) rcs $(NvGLUtils_debug_bin) $(NvGLUtils_debug_obj)
+	$(ECHO) building $@ complete!
 
 NvGLUtils_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvGLUtils_debug_cpp_o): $(NvGLUtils_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvGLUtils_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))))).debug.P; \
+	$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvGLUtils_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))))))
+	cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cppfiles))))).debug.P; \
 	  rm -f $(NvGLUtils_debug_DEPDIR).d
 
 $(NvGLUtils_debug_cc_o): $(NvGLUtils_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvGLUtils_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))))).debug.P; \
+	$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvGLUtils_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))))))
+	cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_ccfiles))))).debug.P; \
 	  rm -f $(NvGLUtils_debug_DEPDIR).d
 
 $(NvGLUtils_debug_c_o): $(NvGLUtils_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvGLUtils_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))))).debug.P; \
+	$(ECHO) NvGLUtils: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvGLUtils_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))))))
+	cp $(NvGLUtils_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_debug_objsdir),, $@))), $(NvGLUtils_cfiles))))).debug.P; \
 	  rm -f $(NvGLUtils_debug_DEPDIR).d
@@ -117,9 +119,11 @@ NvGLUtils_release_common_cflags    += -MMD
 NvGLUtils_release_common_cflags    += $(addprefix -D, $(NvGLUtils_release_defines))
 NvGLUtils_release_common_cflags    += $(addprefix -I, $(NvGLUtils_release_hpaths))
 NvGLUtils_release_cflags	:= $(NvGLUtils_release_common_cflags)
-NvGLUtils_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvGLUtils_release_cppflags	:= $(NvGLUtils_release_common_cflags)
-NvGLUtils_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvGLUtils_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvGLUtils_release_lflags    := $(NvGLUtils_custom_lflags)
 NvGLUtils_release_lflags    += $(addprefix -L, $(NvGLUtils_release_lpaths))
 NvGLUtils_release_lflags    += -Wl,--start-group $(addprefix -l, $(NvGLUtils_release_libraries)) -Wl,--end-group
@@ -131,9 +135,9 @@ NvGLUtils_release_obj      = $(NvGLUtils_release_cpp_o) $(NvGLUtils_release_cc_o
 NvGLUtils_release_bin      := ./../../../extensions/lib/Tegra-Android/libNvGLUtils.a
 
 clean_NvGLUtils_release: 
-	$(SILENT_FLAG)$(ECHO) clean NvGLUtils release
-	$(SILENT_FLAG)$(RMDIR) $(NvGLUtils_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvGLUtils_release_bin)
+	$(ECHO) clean NvGLUtils release
+	$(RMDIR) $(NvGLUtils_release_objsdir)
+	$(RMDIR) $(NvGLUtils_release_bin)
 
 build_NvGLUtils_release: postbuild_NvGLUtils_release
 postbuild_NvGLUtils_release: mainbuild_NvGLUtils_release
@@ -141,40 +145,45 @@ mainbuild_NvGLUtils_release: prebuild_NvGLUtils_release $(NvGLUtils_release_bin)
 prebuild_NvGLUtils_release:
 
 $(NvGLUtils_release_bin): $(NvGLUtils_release_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvGLUtils.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvGLUtils_release_bin) $(NvGLUtils_release_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvGLUtils.a`
+	$(AR) rcs $(NvGLUtils_release_bin) $(NvGLUtils_release_obj)
+	$(ECHO) building $@ complete!
 
 NvGLUtils_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvGLUtils_release_cpp_o): $(NvGLUtils_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvGLUtils_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))))).release.P; \
+	$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvGLUtils_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))))))
+	cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cppfiles))))).release.P; \
 	  rm -f $(NvGLUtils_release_DEPDIR).d
 
 $(NvGLUtils_release_cc_o): $(NvGLUtils_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvGLUtils_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))))).release.P; \
+	$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvGLUtils_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))))))
+	cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_ccfiles))))).release.P; \
 	  rm -f $(NvGLUtils_release_DEPDIR).d
 
 $(NvGLUtils_release_c_o): $(NvGLUtils_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvGLUtils_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))))))
-	$(SILENT_FLAG)cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))))).release.P; \
+	$(ECHO) NvGLUtils: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvGLUtils_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))))))
+	cp $(NvGLUtils_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvGLUtils_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvGLUtils_release_objsdir),, $@))), $(NvGLUtils_cfiles))))).release.P; \
 	  rm -f $(NvGLUtils_release_DEPDIR).d
 
 clean_NvGLUtils:  clean_NvGLUtils_debug clean_NvGLUtils_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

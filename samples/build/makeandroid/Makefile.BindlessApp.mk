@@ -58,9 +58,11 @@ BindlessApp_debug_common_cflags    += -MMD
 BindlessApp_debug_common_cflags    += $(addprefix -D, $(BindlessApp_debug_defines))
 BindlessApp_debug_common_cflags    += $(addprefix -I, $(BindlessApp_debug_hpaths))
 BindlessApp_debug_cflags	:= $(BindlessApp_debug_common_cflags)
-BindlessApp_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 BindlessApp_debug_cppflags	:= $(BindlessApp_debug_common_cflags)
-BindlessApp_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 BindlessApp_debug_lflags    := $(BindlessApp_custom_lflags)
 BindlessApp_debug_lflags    += $(addprefix -L, $(BindlessApp_debug_lpaths))
 BindlessApp_debug_lflags    += -Wl,--start-group $(addprefix -l, $(BindlessApp_debug_libraries)) -Wl,--end-group
@@ -73,9 +75,9 @@ BindlessApp_debug_obj      = $(BindlessApp_debug_cpp_o) $(BindlessApp_debug_cc_o
 BindlessApp_debug_bin      := ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so
 
 clean_BindlessApp_debug: 
-	$(SILENT_FLAG)$(ECHO) clean BindlessApp debug
-	$(SILENT_FLAG)$(RMDIR) $(BindlessApp_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(BindlessApp_debug_bin)
+	$(ECHO) clean BindlessApp debug
+	$(RMDIR) $(BindlessApp_debug_objsdir)
+	$(RMDIR) $(BindlessApp_debug_bin)
 
 build_BindlessApp_debug: postbuild_BindlessApp_debug
 postbuild_BindlessApp_debug: mainbuild_BindlessApp_debug preantbuild_BindlessApp_debug antbuild_BindlessApp_debug
@@ -86,37 +88,37 @@ mainbuild_BindlessApp_debug: prebuild_BindlessApp_debug $(BindlessApp_debug_bin)
 prebuild_BindlessApp_debug:
 
 $(BindlessApp_debug_bin): $(BindlessApp_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so`
-	$(SILENT_FLAG)$(CXX) -shared $(BindlessApp_debug_obj) $(BindlessApp_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so`
+	$(CXX) -shared $(BindlessApp_debug_obj) $(BindlessApp_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 BindlessApp_debug_DEPDIR = $(dir $(@))/$(*F)
 $(BindlessApp_debug_cpp_o): $(BindlessApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BindlessApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))))).debug.P; \
+	$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BindlessApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))))))
+	cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cppfiles))))).debug.P; \
 	  rm -f $(BindlessApp_debug_DEPDIR).d
 
 $(BindlessApp_debug_cc_o): $(BindlessApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BindlessApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))))).debug.P; \
+	$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BindlessApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))))))
+	cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_ccfiles))))).debug.P; \
 	  rm -f $(BindlessApp_debug_DEPDIR).d
 
 $(BindlessApp_debug_c_o): $(BindlessApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(BindlessApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))))).debug.P; \
+	$(ECHO) BindlessApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(BindlessApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))))))
+	cp $(BindlessApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_debug_objsdir),, $@))), $(BindlessApp_cfiles))))).debug.P; \
 	  rm -f $(BindlessApp_debug_DEPDIR).d
@@ -165,9 +167,11 @@ BindlessApp_release_common_cflags    += -MMD
 BindlessApp_release_common_cflags    += $(addprefix -D, $(BindlessApp_release_defines))
 BindlessApp_release_common_cflags    += $(addprefix -I, $(BindlessApp_release_hpaths))
 BindlessApp_release_cflags	:= $(BindlessApp_release_common_cflags)
-BindlessApp_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 BindlessApp_release_cppflags	:= $(BindlessApp_release_common_cflags)
-BindlessApp_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BindlessApp_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 BindlessApp_release_lflags    := $(BindlessApp_custom_lflags)
 BindlessApp_release_lflags    += $(addprefix -L, $(BindlessApp_release_lpaths))
 BindlessApp_release_lflags    += -Wl,--start-group $(addprefix -l, $(BindlessApp_release_libraries)) -Wl,--end-group
@@ -180,9 +184,9 @@ BindlessApp_release_obj      = $(BindlessApp_release_cpp_o) $(BindlessApp_releas
 BindlessApp_release_bin      := ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so
 
 clean_BindlessApp_release: 
-	$(SILENT_FLAG)$(ECHO) clean BindlessApp release
-	$(SILENT_FLAG)$(RMDIR) $(BindlessApp_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(BindlessApp_release_bin)
+	$(ECHO) clean BindlessApp release
+	$(RMDIR) $(BindlessApp_release_objsdir)
+	$(RMDIR) $(BindlessApp_release_bin)
 
 build_BindlessApp_release: postbuild_BindlessApp_release
 postbuild_BindlessApp_release: mainbuild_BindlessApp_release preantbuild_BindlessApp_release antbuild_BindlessApp_release
@@ -193,40 +197,45 @@ mainbuild_BindlessApp_release: prebuild_BindlessApp_release $(BindlessApp_releas
 prebuild_BindlessApp_release:
 
 $(BindlessApp_release_bin): $(BindlessApp_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so`
-	$(SILENT_FLAG)$(CXX) -shared $(BindlessApp_release_obj) $(BindlessApp_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/BindlessApp/libs/armeabi-v7a/libBindlessApp.so`
+	$(CXX) -shared $(BindlessApp_release_obj) $(BindlessApp_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 BindlessApp_release_DEPDIR = $(dir $(@))/$(*F)
 $(BindlessApp_release_cpp_o): $(BindlessApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BindlessApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))))).release.P; \
+	$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BindlessApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))))))
+	cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cppfiles))))).release.P; \
 	  rm -f $(BindlessApp_release_DEPDIR).d
 
 $(BindlessApp_release_cc_o): $(BindlessApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BindlessApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))))).release.P; \
+	$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BindlessApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))))))
+	cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_ccfiles))))).release.P; \
 	  rm -f $(BindlessApp_release_DEPDIR).d
 
 $(BindlessApp_release_c_o): $(BindlessApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(BindlessApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))))))
-	$(SILENT_FLAG)cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))))).release.P; \
+	$(ECHO) BindlessApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(BindlessApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))))))
+	cp $(BindlessApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BindlessApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BindlessApp_release_objsdir),, $@))), $(BindlessApp_cfiles))))).release.P; \
 	  rm -f $(BindlessApp_release_DEPDIR).d
 
 clean_BindlessApp:  clean_BindlessApp_debug clean_BindlessApp_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

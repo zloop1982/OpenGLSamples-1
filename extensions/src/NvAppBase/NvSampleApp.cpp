@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvSampleApp.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -456,12 +456,36 @@ bool NvSampleApp::keyInput(uint32_t code, NvKeyActionType::Enum action) {
             }
             case NvKey::K_ENTER: {
                 if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
-                r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
+                // handle ATV support...
+                if (mTweakBar && !mTweakBar->GetVisibility()) {
+                    // then show tweakbar.
+                    NvUIReaction &react = mUIWindow->GetReactionEdit(true);
+                    react.code = TWEAKBAR_ACTIONCODE_BASE;
+                    react.state = 1;
+                    r = nvuiEventHandledReaction;
+                } else {
+                    // handle as normal in UI system...
+                    r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
+                }
                 break;
             }
+            case NvKey::K_BACK: // fall through
             case NvKey::K_BACKSPACE: {
                 if (!mUIWindow || NvKeyActionType::DOWN!=action) break; // we don't want autorepeat...
-                r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
+                // handle ATV support...
+                if (mUIWindow->HasFocus()) {
+                    r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
+                } else if (mTweakBar && mTweakBar->GetVisibility()) {
+                    // then hide tweakbar.
+                    NvUIReaction &react = mUIWindow->GetReactionEdit(true);
+                    react.code = TWEAKBAR_ACTIONCODE_BASE;
+                    react.state = 0;
+                    r = nvuiEventHandledReaction;
+                } else if (NvKey::K_BACK==code) {
+                    // explicit exit for the BACK button.
+                    r = nvuiEventHandled;
+                    appRequestExit();
+                }
                 break;
             }
             case NvKey::K_ARROW_LEFT: {
@@ -556,6 +580,7 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
         // would be nice if this was some pluggable class we could add/remove more easily like inputtransformer.
         NvUIEventResponse r = nvuiEventNotHandled;
         switch(button) {
+            case NvGamepad::BUTTON_PLAY_PAUSE: // fall through; ATV handles playpause==start
             case NvGamepad::BUTTON_START: {
                 if (!mUIWindow) break;
                 NvUIReaction &react = mUIWindow->GetReactionEdit(true);
@@ -563,10 +588,6 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
                 react.state = mTweakBar->GetVisibility() ? 0 : 1;
                 r = nvuiEventHandledReaction;
                 break;
-            }
-            case NvGamepad::BUTTON_BACK: {
-                appRequestExit();
-                return true;
             }
             case NvGamepad::BUTTON_DPAD_DOWN: {
                 if (!mUIWindow) break;
@@ -578,14 +599,38 @@ bool NvSampleApp::gamepadButtonChanged(uint32_t button, bool down) {
                 r = mUIWindow->HandleFocusEvent(NvFocusEvent::MOVE_UP);
                 break;
             }
+            case NvGamepad::BUTTON_CENTER: // fall through; ATV handles CENTER==A
             case NvGamepad::BUTTON_A: {
                 if (!mUIWindow) break;
-                r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
+                // handle ATV support...
+                if (mTweakBar && !mTweakBar->GetVisibility()) {
+                    // then show tweakbar.
+                    NvUIReaction &react = mUIWindow->GetReactionEdit(true);
+                    react.code = TWEAKBAR_ACTIONCODE_BASE;
+                    react.state = 1;
+                    r = nvuiEventHandledReaction;
+                } else {
+                    r = mUIWindow->HandleFocusEvent(NvFocusEvent::ACT_PRESS);
+                }
                 break;
             }
+            case NvGamepad::BUTTON_BACK: // fall through
             case NvGamepad::BUTTON_B: {
                 if (!mUIWindow) break;
-                r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
+                // handle ATV support...
+                if (mUIWindow->HasFocus()) {
+                    r = mUIWindow->HandleFocusEvent(NvFocusEvent::FOCUS_CLEAR);
+                } else if (mTweakBar && mTweakBar->GetVisibility()) {
+                    // then hide tweakbar.
+                    NvUIReaction &react = mUIWindow->GetReactionEdit(true);
+                    react.code = TWEAKBAR_ACTIONCODE_BASE;
+                    react.state = 0;
+                    r = nvuiEventHandledReaction;
+                } else if (NvGamepad::BUTTON_BACK==button) {
+                    // explicit exit for the BACK button.
+                    r = nvuiEventHandled;
+                    appRequestExit();
+                }
                 break;
             }
             case NvGamepad::BUTTON_DPAD_LEFT: {
@@ -674,7 +719,12 @@ void NvSampleApp::mainLoop() {
     mDrawRate = 0.0f;
     NvStopWatch* drawTime = createStopWatch();
 
+    // TBD - WAR for Android lifecycle change; this will be reorganized in the next release
+#ifdef ANDROID
+    while (getPlatformContext()->isAppRunning()) {
+#else
     while (getPlatformContext()->isAppRunning() && !isExiting()) {
+#endif
         bool needsReshape = false;
 
         getPlatformContext()->pollEvents(this);
@@ -714,7 +764,8 @@ void NvSampleApp::mainLoop() {
                 needsReshape = true;
             }
 
-            if (needsReshape) {
+            // initialization may cause the app to want to exit, so test exiting
+            if (needsReshape && !isExiting()) {
                 baseReshape(getGLContext()->width(), getGLContext()->height());
             }
 

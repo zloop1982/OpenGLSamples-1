@@ -55,9 +55,11 @@ InstancingApp_debug_common_cflags    += -MMD
 InstancingApp_debug_common_cflags    += $(addprefix -D, $(InstancingApp_debug_defines))
 InstancingApp_debug_common_cflags    += $(addprefix -I, $(InstancingApp_debug_hpaths))
 InstancingApp_debug_cflags	:= $(InstancingApp_debug_common_cflags)
-InstancingApp_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 InstancingApp_debug_cppflags	:= $(InstancingApp_debug_common_cflags)
-InstancingApp_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 InstancingApp_debug_lflags    := $(InstancingApp_custom_lflags)
 InstancingApp_debug_lflags    += $(addprefix -L, $(InstancingApp_debug_lpaths))
 InstancingApp_debug_lflags    += -Wl,--start-group $(addprefix -l, $(InstancingApp_debug_libraries)) -Wl,--end-group
@@ -70,9 +72,9 @@ InstancingApp_debug_obj      = $(InstancingApp_debug_cpp_o) $(InstancingApp_debu
 InstancingApp_debug_bin      := ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so
 
 clean_InstancingApp_debug: 
-	$(SILENT_FLAG)$(ECHO) clean InstancingApp debug
-	$(SILENT_FLAG)$(RMDIR) $(InstancingApp_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(InstancingApp_debug_bin)
+	$(ECHO) clean InstancingApp debug
+	$(RMDIR) $(InstancingApp_debug_objsdir)
+	$(RMDIR) $(InstancingApp_debug_bin)
 
 build_InstancingApp_debug: postbuild_InstancingApp_debug
 postbuild_InstancingApp_debug: mainbuild_InstancingApp_debug preantbuild_InstancingApp_debug antbuild_InstancingApp_debug
@@ -83,37 +85,37 @@ mainbuild_InstancingApp_debug: prebuild_InstancingApp_debug $(InstancingApp_debu
 prebuild_InstancingApp_debug:
 
 $(InstancingApp_debug_bin): $(InstancingApp_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so`
-	$(SILENT_FLAG)$(CXX) -shared $(InstancingApp_debug_obj) $(InstancingApp_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so`
+	$(CXX) -shared $(InstancingApp_debug_obj) $(InstancingApp_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 InstancingApp_debug_DEPDIR = $(dir $(@))/$(*F)
 $(InstancingApp_debug_cpp_o): $(InstancingApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(InstancingApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))))).debug.P; \
+	$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(InstancingApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))))))
+	cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cppfiles))))).debug.P; \
 	  rm -f $(InstancingApp_debug_DEPDIR).d
 
 $(InstancingApp_debug_cc_o): $(InstancingApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(InstancingApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))))).debug.P; \
+	$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(InstancingApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))))))
+	cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_ccfiles))))).debug.P; \
 	  rm -f $(InstancingApp_debug_DEPDIR).d
 
 $(InstancingApp_debug_c_o): $(InstancingApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(InstancingApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))))).debug.P; \
+	$(ECHO) InstancingApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(InstancingApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))))))
+	cp $(InstancingApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_debug_objsdir),, $@))), $(InstancingApp_cfiles))))).debug.P; \
 	  rm -f $(InstancingApp_debug_DEPDIR).d
@@ -160,9 +162,11 @@ InstancingApp_release_common_cflags    += -MMD
 InstancingApp_release_common_cflags    += $(addprefix -D, $(InstancingApp_release_defines))
 InstancingApp_release_common_cflags    += $(addprefix -I, $(InstancingApp_release_hpaths))
 InstancingApp_release_cflags	:= $(InstancingApp_release_common_cflags)
-InstancingApp_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 InstancingApp_release_cppflags	:= $(InstancingApp_release_common_cflags)
-InstancingApp_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+InstancingApp_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 InstancingApp_release_lflags    := $(InstancingApp_custom_lflags)
 InstancingApp_release_lflags    += $(addprefix -L, $(InstancingApp_release_lpaths))
 InstancingApp_release_lflags    += -Wl,--start-group $(addprefix -l, $(InstancingApp_release_libraries)) -Wl,--end-group
@@ -175,9 +179,9 @@ InstancingApp_release_obj      = $(InstancingApp_release_cpp_o) $(InstancingApp_
 InstancingApp_release_bin      := ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so
 
 clean_InstancingApp_release: 
-	$(SILENT_FLAG)$(ECHO) clean InstancingApp release
-	$(SILENT_FLAG)$(RMDIR) $(InstancingApp_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(InstancingApp_release_bin)
+	$(ECHO) clean InstancingApp release
+	$(RMDIR) $(InstancingApp_release_objsdir)
+	$(RMDIR) $(InstancingApp_release_bin)
 
 build_InstancingApp_release: postbuild_InstancingApp_release
 postbuild_InstancingApp_release: mainbuild_InstancingApp_release preantbuild_InstancingApp_release antbuild_InstancingApp_release
@@ -188,40 +192,45 @@ mainbuild_InstancingApp_release: prebuild_InstancingApp_release $(InstancingApp_
 prebuild_InstancingApp_release:
 
 $(InstancingApp_release_bin): $(InstancingApp_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so`
-	$(SILENT_FLAG)$(CXX) -shared $(InstancingApp_release_obj) $(InstancingApp_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es2-aurora/InstancingApp/libs/armeabi-v7a/libInstancingApp.so`
+	$(CXX) -shared $(InstancingApp_release_obj) $(InstancingApp_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 InstancingApp_release_DEPDIR = $(dir $(@))/$(*F)
 $(InstancingApp_release_cpp_o): $(InstancingApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(InstancingApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))))).release.P; \
+	$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(InstancingApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))))))
+	cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cppfiles))))).release.P; \
 	  rm -f $(InstancingApp_release_DEPDIR).d
 
 $(InstancingApp_release_cc_o): $(InstancingApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(InstancingApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))))).release.P; \
+	$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(InstancingApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))))))
+	cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_ccfiles))))).release.P; \
 	  rm -f $(InstancingApp_release_DEPDIR).d
 
 $(InstancingApp_release_c_o): $(InstancingApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(InstancingApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))))))
-	$(SILENT_FLAG)cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))))).release.P; \
+	$(ECHO) InstancingApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(InstancingApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))))))
+	cp $(InstancingApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(InstancingApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(InstancingApp_release_objsdir),, $@))), $(InstancingApp_cfiles))))).release.P; \
 	  rm -f $(InstancingApp_release_DEPDIR).d
 
 clean_InstancingApp:  clean_InstancingApp_debug clean_InstancingApp_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

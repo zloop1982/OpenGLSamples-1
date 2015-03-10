@@ -54,14 +54,14 @@ Bloom_debug_common_cflags    += $(addprefix -D, $(Bloom_debug_defines))
 Bloom_debug_common_cflags    += $(addprefix -I, $(Bloom_debug_hpaths))
 Bloom_debug_common_cflags  += -m64
 Bloom_debug_cflags	:= $(Bloom_debug_common_cflags)
-Bloom_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+Bloom_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 Bloom_debug_cflags  += -malign-double
-Bloom_debug_cflags  += -g
+Bloom_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 Bloom_debug_cppflags	:= $(Bloom_debug_common_cflags)
-Bloom_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+Bloom_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 Bloom_debug_cppflags  += -Wno-reorder
 Bloom_debug_cppflags  += -malign-double
-Bloom_debug_cppflags  += -g
+Bloom_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 Bloom_debug_lflags    := $(Bloom_custom_lflags)
 Bloom_debug_lflags    += $(addprefix -L, $(Bloom_debug_lpaths))
 Bloom_debug_lflags    += -Wl,--start-group $(addprefix -l, $(Bloom_debug_libraries)) -Wl,--end-group
@@ -76,9 +76,9 @@ Bloom_debug_obj      = $(Bloom_debug_cpp_o) $(Bloom_debug_cc_o) $(Bloom_debug_c_
 Bloom_debug_bin      := ./../../bin/linux64/BloomD
 
 clean_Bloom_debug: 
-	$(SILENT_FLAG)$(ECHO) clean Bloom debug
-	$(SILENT_FLAG)$(RMDIR) $(Bloom_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(Bloom_debug_bin)
+	$(ECHO) clean Bloom debug
+	$(RMDIR) $(Bloom_debug_objsdir)
+	$(RMDIR) $(Bloom_debug_bin)
 
 build_Bloom_debug: postbuild_Bloom_debug
 postbuild_Bloom_debug: mainbuild_Bloom_debug
@@ -86,37 +86,37 @@ mainbuild_Bloom_debug: prebuild_Bloom_debug $(Bloom_debug_bin)
 prebuild_Bloom_debug:
 
 $(Bloom_debug_bin): $(Bloom_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug build_R3_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/BloomD`
-	$(SILENT_FLAG)$(CCLD) $(Bloom_debug_obj) $(Bloom_debug_lflags) -o $(Bloom_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/BloomD`
+	$(CCLD) $(Bloom_debug_obj) $(Bloom_debug_lflags) -o $(Bloom_debug_bin) 
+	$(ECHO) building $@ complete!
 
 Bloom_debug_DEPDIR = $(dir $(@))/$(*F)
 $(Bloom_debug_cpp_o): $(Bloom_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(Bloom_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))))).debug.P; \
+	$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(Bloom_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))))))
+	cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cppfiles))))).debug.P; \
 	  rm -f $(Bloom_debug_DEPDIR).d
 
 $(Bloom_debug_cc_o): $(Bloom_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(Bloom_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))))).debug.P; \
+	$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(Bloom_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))))))
+	cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_ccfiles))))).debug.P; \
 	  rm -f $(Bloom_debug_DEPDIR).d
 
 $(Bloom_debug_c_o): $(Bloom_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(Bloom_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))))).debug.P; \
+	$(ECHO) Bloom: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(Bloom_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))))))
+	cp $(Bloom_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_debug_objsdir),, $@))), $(Bloom_cfiles))))).debug.P; \
 	  rm -f $(Bloom_debug_DEPDIR).d
@@ -162,14 +162,14 @@ Bloom_release_common_cflags    += $(addprefix -D, $(Bloom_release_defines))
 Bloom_release_common_cflags    += $(addprefix -I, $(Bloom_release_hpaths))
 Bloom_release_common_cflags  += -m64
 Bloom_release_cflags	:= $(Bloom_release_common_cflags)
-Bloom_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+Bloom_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 Bloom_release_cflags  += -malign-double
-Bloom_release_cflags  += -O2
+Bloom_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 Bloom_release_cppflags	:= $(Bloom_release_common_cflags)
-Bloom_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+Bloom_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 Bloom_release_cppflags  += -Wno-reorder
 Bloom_release_cppflags  += -malign-double
-Bloom_release_cppflags  += -O2
+Bloom_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 Bloom_release_lflags    := $(Bloom_custom_lflags)
 Bloom_release_lflags    += $(addprefix -L, $(Bloom_release_lpaths))
 Bloom_release_lflags    += -Wl,--start-group $(addprefix -l, $(Bloom_release_libraries)) -Wl,--end-group
@@ -184,9 +184,9 @@ Bloom_release_obj      = $(Bloom_release_cpp_o) $(Bloom_release_cc_o) $(Bloom_re
 Bloom_release_bin      := ./../../bin/linux64/Bloom
 
 clean_Bloom_release: 
-	$(SILENT_FLAG)$(ECHO) clean Bloom release
-	$(SILENT_FLAG)$(RMDIR) $(Bloom_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(Bloom_release_bin)
+	$(ECHO) clean Bloom release
+	$(RMDIR) $(Bloom_release_objsdir)
+	$(RMDIR) $(Bloom_release_bin)
 
 build_Bloom_release: postbuild_Bloom_release
 postbuild_Bloom_release: mainbuild_Bloom_release
@@ -194,40 +194,45 @@ mainbuild_Bloom_release: prebuild_Bloom_release $(Bloom_release_bin)
 prebuild_Bloom_release:
 
 $(Bloom_release_bin): $(Bloom_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release build_R3_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/Bloom`
-	$(SILENT_FLAG)$(CCLD) $(Bloom_release_obj) $(Bloom_release_lflags) -o $(Bloom_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/Bloom`
+	$(CCLD) $(Bloom_release_obj) $(Bloom_release_lflags) -o $(Bloom_release_bin) 
+	$(ECHO) building $@ complete!
 
 Bloom_release_DEPDIR = $(dir $(@))/$(*F)
 $(Bloom_release_cpp_o): $(Bloom_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(Bloom_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))))).release.P; \
+	$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(Bloom_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))))))
+	cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cppfiles))))).release.P; \
 	  rm -f $(Bloom_release_DEPDIR).d
 
 $(Bloom_release_cc_o): $(Bloom_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(Bloom_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))))).release.P; \
+	$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(Bloom_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))))))
+	cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_ccfiles))))).release.P; \
 	  rm -f $(Bloom_release_DEPDIR).d
 
 $(Bloom_release_c_o): $(Bloom_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(Bloom_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))))))
-	$(SILENT_FLAG)cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))))).release.P; \
+	$(ECHO) Bloom: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(Bloom_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))))))
+	cp $(Bloom_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(Bloom_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(Bloom_release_objsdir),, $@))), $(Bloom_cfiles))))).release.P; \
 	  rm -f $(Bloom_release_DEPDIR).d
 
 clean_Bloom:  clean_Bloom_debug clean_Bloom_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

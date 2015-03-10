@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvGamepad/NvGamepadAndroid.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -35,6 +35,7 @@
 
 #include "NvGamepad/NvGamepadAndroid.h"
 #include <unistd.h>
+#include <android/log.h>
 extern "C" {
 #include <android/input.h>
 }
@@ -42,8 +43,14 @@ extern "C" {
 
 NvGamepadAndroid::NvGamepadAndroid() {
     mStates = new State[MAX_GAMEPADS];
+    mLastReturnedTimestamps = new uint32_t[MAX_GAMEPADS];
 
     memset(mStates, 0, MAX_GAMEPADS * sizeof(State));
+    memset(mLastReturnedTimestamps, 0, MAX_GAMEPADS * sizeof(uint32_t));
+
+    mCurrentTimestamp = 0;
+
+    uint32_t* mLastReturnedTimestamps;
 }
 
 NvGamepadAndroid::~NvGamepadAndroid() {
@@ -52,6 +59,7 @@ NvGamepadAndroid::~NvGamepadAndroid() {
 
 bool NvGamepadAndroid::getState(int32_t padID, State& state) {
     state = mStates[padID];
+    mLastReturnedTimestamps[padID] = state.mTimestamp;
 
     // For now, we assume that any pad that has sent us an event is connected.
     // This is obviously a hack, since it does not include:
@@ -128,9 +136,17 @@ bool NvGamepadAndroid::pollGamepads(AInputEvent* event, uint32_t& changedMask) {
 
             ProcessDPAD(event, state);
 
-            // ???? AMOTION_EVENT_AXIS_HAT_X, AMOTION_EVENT_AXIS_HAT_Y
-            state.mLeftTrigger = MapAxis(event, AMOTION_EVENT_AXIS_LTRIGGER);
-            state.mRightTrigger = MapAxis(event, AMOTION_EVENT_AXIS_RTRIGGER);
+            // need to map bot pairs of axes as of Android L
+            {
+                float lTrigger = MapAxis(event, AMOTION_EVENT_AXIS_LTRIGGER);
+                float brake = MapAxis(event, AMOTION_EVENT_AXIS_BRAKE);
+                state.mLeftTrigger = (lTrigger > brake) ? lTrigger : brake;
+            }
+            {
+                float gas = MapAxis(event, AMOTION_EVENT_AXIS_GAS);
+                float rTrigger = MapAxis(event, AMOTION_EVENT_AXIS_RTRIGGER);
+                state.mRightTrigger = (rTrigger > gas) ? rTrigger : gas;
+            }
 
             state.mTimestamp++;
             changedMask |= 1;
@@ -164,6 +180,9 @@ bool NvGamepadAndroid::pollGamepads(AInputEvent* event, uint32_t& changedMask) {
         case AKEYCODE_DPAD_RIGHT:
             button = BUTTON_DPAD_RIGHT;
             break;
+        case AKEYCODE_DPAD_CENTER:
+            button = BUTTON_CENTER;
+            break;
         case AKEYCODE_BUTTON_L1:
             button = BUTTON_LEFT_SHOULDER;
             break;
@@ -185,7 +204,13 @@ bool NvGamepadAndroid::pollGamepads(AInputEvent* event, uint32_t& changedMask) {
         case AKEYCODE_BUTTON_Y:
             button = BUTTON_Y;
             break;
+        case AKEYCODE_MEDIA_PLAY_PAUSE:
+            button = BUTTON_PLAY_PAUSE;
+            break;
         default:
+#ifdef _DEBUG
+            __android_log_print(ANDROID_LOG_VERBOSE, "NvGamepad",  "unknown button 0x%0x", code);
+#endif
             return false;
         };
 

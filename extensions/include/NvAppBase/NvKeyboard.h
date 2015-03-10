@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        NvAppBase/NvKeyboard.h
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -59,6 +59,8 @@ struct NvKey {
     // modifiers as bindable keys.
     enum Enum {
         K_UNKNOWN = 0x80000000, ///< high bit + zero flags unknown value.
+
+        K_BACK = 0x04, // mapping android BACK button eventcode value.
 
         K_ESC = 0x1B, // ascii
         K_FKEY_BIT = 0x2000,

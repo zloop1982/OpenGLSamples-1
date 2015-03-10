@@ -56,14 +56,14 @@ FeedbackParticlesApp_debug_common_cflags    += $(addprefix -D, $(FeedbackParticl
 FeedbackParticlesApp_debug_common_cflags    += $(addprefix -I, $(FeedbackParticlesApp_debug_hpaths))
 FeedbackParticlesApp_debug_common_cflags  += -m32
 FeedbackParticlesApp_debug_cflags	:= $(FeedbackParticlesApp_debug_common_cflags)
-FeedbackParticlesApp_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+FeedbackParticlesApp_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 FeedbackParticlesApp_debug_cflags  += -malign-double
-FeedbackParticlesApp_debug_cflags  += -g
+FeedbackParticlesApp_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 FeedbackParticlesApp_debug_cppflags	:= $(FeedbackParticlesApp_debug_common_cflags)
-FeedbackParticlesApp_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+FeedbackParticlesApp_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 FeedbackParticlesApp_debug_cppflags  += -Wno-reorder
 FeedbackParticlesApp_debug_cppflags  += -malign-double
-FeedbackParticlesApp_debug_cppflags  += -g
+FeedbackParticlesApp_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 FeedbackParticlesApp_debug_lflags    := $(FeedbackParticlesApp_custom_lflags)
 FeedbackParticlesApp_debug_lflags    += $(addprefix -L, $(FeedbackParticlesApp_debug_lpaths))
 FeedbackParticlesApp_debug_lflags    += -Wl,--start-group $(addprefix -l, $(FeedbackParticlesApp_debug_libraries)) -Wl,--end-group
@@ -77,9 +77,9 @@ FeedbackParticlesApp_debug_obj      = $(FeedbackParticlesApp_debug_cpp_o) $(Feed
 FeedbackParticlesApp_debug_bin      := ./../../bin/linux32/FeedbackParticlesAppD
 
 clean_FeedbackParticlesApp_debug: 
-	$(SILENT_FLAG)$(ECHO) clean FeedbackParticlesApp debug
-	$(SILENT_FLAG)$(RMDIR) $(FeedbackParticlesApp_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(FeedbackParticlesApp_debug_bin)
+	$(ECHO) clean FeedbackParticlesApp debug
+	$(RMDIR) $(FeedbackParticlesApp_debug_objsdir)
+	$(RMDIR) $(FeedbackParticlesApp_debug_bin)
 
 build_FeedbackParticlesApp_debug: postbuild_FeedbackParticlesApp_debug
 postbuild_FeedbackParticlesApp_debug: mainbuild_FeedbackParticlesApp_debug
@@ -87,37 +87,37 @@ mainbuild_FeedbackParticlesApp_debug: prebuild_FeedbackParticlesApp_debug $(Feed
 prebuild_FeedbackParticlesApp_debug:
 
 $(FeedbackParticlesApp_debug_bin): $(FeedbackParticlesApp_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/FeedbackParticlesAppD`
-	$(SILENT_FLAG)$(CCLD) $(FeedbackParticlesApp_debug_obj) $(FeedbackParticlesApp_debug_lflags) -o $(FeedbackParticlesApp_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/FeedbackParticlesAppD`
+	$(CCLD) $(FeedbackParticlesApp_debug_obj) $(FeedbackParticlesApp_debug_lflags) -o $(FeedbackParticlesApp_debug_bin) 
+	$(ECHO) building $@ complete!
 
 FeedbackParticlesApp_debug_DEPDIR = $(dir $(@))/$(*F)
 $(FeedbackParticlesApp_debug_cpp_o): $(FeedbackParticlesApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FeedbackParticlesApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).debug.P; \
+	$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FeedbackParticlesApp_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))))
+	cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).debug.P; \
 	  rm -f $(FeedbackParticlesApp_debug_DEPDIR).d
 
 $(FeedbackParticlesApp_debug_cc_o): $(FeedbackParticlesApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FeedbackParticlesApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).debug.P; \
+	$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FeedbackParticlesApp_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))))
+	cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).debug.P; \
 	  rm -f $(FeedbackParticlesApp_debug_DEPDIR).d
 
 $(FeedbackParticlesApp_debug_c_o): $(FeedbackParticlesApp_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(FeedbackParticlesApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).debug.P; \
+	$(ECHO) FeedbackParticlesApp: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(FeedbackParticlesApp_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))))
+	cp $(FeedbackParticlesApp_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_debug_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).debug.P; \
 	  rm -f $(FeedbackParticlesApp_debug_DEPDIR).d
@@ -161,14 +161,14 @@ FeedbackParticlesApp_release_common_cflags    += $(addprefix -D, $(FeedbackParti
 FeedbackParticlesApp_release_common_cflags    += $(addprefix -I, $(FeedbackParticlesApp_release_hpaths))
 FeedbackParticlesApp_release_common_cflags  += -m32
 FeedbackParticlesApp_release_cflags	:= $(FeedbackParticlesApp_release_common_cflags)
-FeedbackParticlesApp_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+FeedbackParticlesApp_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 FeedbackParticlesApp_release_cflags  += -malign-double
-FeedbackParticlesApp_release_cflags  += -O2
+FeedbackParticlesApp_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 FeedbackParticlesApp_release_cppflags	:= $(FeedbackParticlesApp_release_common_cflags)
-FeedbackParticlesApp_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+FeedbackParticlesApp_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 FeedbackParticlesApp_release_cppflags  += -Wno-reorder
 FeedbackParticlesApp_release_cppflags  += -malign-double
-FeedbackParticlesApp_release_cppflags  += -O2
+FeedbackParticlesApp_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 FeedbackParticlesApp_release_lflags    := $(FeedbackParticlesApp_custom_lflags)
 FeedbackParticlesApp_release_lflags    += $(addprefix -L, $(FeedbackParticlesApp_release_lpaths))
 FeedbackParticlesApp_release_lflags    += -Wl,--start-group $(addprefix -l, $(FeedbackParticlesApp_release_libraries)) -Wl,--end-group
@@ -182,9 +182,9 @@ FeedbackParticlesApp_release_obj      = $(FeedbackParticlesApp_release_cpp_o) $(
 FeedbackParticlesApp_release_bin      := ./../../bin/linux32/FeedbackParticlesApp
 
 clean_FeedbackParticlesApp_release: 
-	$(SILENT_FLAG)$(ECHO) clean FeedbackParticlesApp release
-	$(SILENT_FLAG)$(RMDIR) $(FeedbackParticlesApp_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(FeedbackParticlesApp_release_bin)
+	$(ECHO) clean FeedbackParticlesApp release
+	$(RMDIR) $(FeedbackParticlesApp_release_objsdir)
+	$(RMDIR) $(FeedbackParticlesApp_release_bin)
 
 build_FeedbackParticlesApp_release: postbuild_FeedbackParticlesApp_release
 postbuild_FeedbackParticlesApp_release: mainbuild_FeedbackParticlesApp_release
@@ -192,40 +192,45 @@ mainbuild_FeedbackParticlesApp_release: prebuild_FeedbackParticlesApp_release $(
 prebuild_FeedbackParticlesApp_release:
 
 $(FeedbackParticlesApp_release_bin): $(FeedbackParticlesApp_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/FeedbackParticlesApp`
-	$(SILENT_FLAG)$(CCLD) $(FeedbackParticlesApp_release_obj) $(FeedbackParticlesApp_release_lflags) -o $(FeedbackParticlesApp_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/FeedbackParticlesApp`
+	$(CCLD) $(FeedbackParticlesApp_release_obj) $(FeedbackParticlesApp_release_lflags) -o $(FeedbackParticlesApp_release_bin) 
+	$(ECHO) building $@ complete!
 
 FeedbackParticlesApp_release_DEPDIR = $(dir $(@))/$(*F)
 $(FeedbackParticlesApp_release_cpp_o): $(FeedbackParticlesApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FeedbackParticlesApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).release.P; \
+	$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FeedbackParticlesApp_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))))
+	cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cppfiles))))).release.P; \
 	  rm -f $(FeedbackParticlesApp_release_DEPDIR).d
 
 $(FeedbackParticlesApp_release_cc_o): $(FeedbackParticlesApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FeedbackParticlesApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).release.P; \
+	$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FeedbackParticlesApp_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))))
+	cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_ccfiles))))).release.P; \
 	  rm -f $(FeedbackParticlesApp_release_DEPDIR).d
 
 $(FeedbackParticlesApp_release_c_o): $(FeedbackParticlesApp_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(FeedbackParticlesApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))))
-	$(SILENT_FLAG)cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).release.P; \
+	$(ECHO) FeedbackParticlesApp: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(FeedbackParticlesApp_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))))
+	cp $(FeedbackParticlesApp_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FeedbackParticlesApp_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FeedbackParticlesApp_release_objsdir),, $@))), $(FeedbackParticlesApp_cfiles))))).release.P; \
 	  rm -f $(FeedbackParticlesApp_release_DEPDIR).d
 
 clean_FeedbackParticlesApp:  clean_FeedbackParticlesApp_debug clean_FeedbackParticlesApp_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

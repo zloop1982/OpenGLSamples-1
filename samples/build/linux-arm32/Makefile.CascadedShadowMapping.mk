@@ -53,10 +53,10 @@ CascadedShadowMapping_debug_libraries += :libNvUID.a
 CascadedShadowMapping_debug_cflags    := $(CascadedShadowMapping_custom_cflags)
 CascadedShadowMapping_debug_cflags    += $(addprefix -D, $(CascadedShadowMapping_debug_defines))
 CascadedShadowMapping_debug_cflags    += $(addprefix -I, $(CascadedShadowMapping_debug_hpaths))
-CascadedShadowMapping_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+CascadedShadowMapping_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 CascadedShadowMapping_debug_cflags  += -Wno-reorder
 CascadedShadowMapping_debug_cflags  += -std="gnu++0x"
-CascadedShadowMapping_debug_cflags  += -g
+CascadedShadowMapping_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 CascadedShadowMapping_debug_lflags    := $(CascadedShadowMapping_custom_lflags)
 CascadedShadowMapping_debug_lflags    += $(addprefix -L, $(CascadedShadowMapping_debug_lpaths))
 CascadedShadowMapping_debug_lflags    += -Wl,--start-group $(addprefix -l, $(CascadedShadowMapping_debug_libraries)) -Wl,--end-group
@@ -136,10 +136,10 @@ CascadedShadowMapping_release_libraries += :libNvUI.a
 CascadedShadowMapping_release_cflags    := $(CascadedShadowMapping_custom_cflags)
 CascadedShadowMapping_release_cflags    += $(addprefix -D, $(CascadedShadowMapping_release_defines))
 CascadedShadowMapping_release_cflags    += $(addprefix -I, $(CascadedShadowMapping_release_hpaths))
-CascadedShadowMapping_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+CascadedShadowMapping_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 CascadedShadowMapping_release_cflags  += -Wno-reorder
 CascadedShadowMapping_release_cflags  += -std="gnu++0x"
-CascadedShadowMapping_release_cflags  += -O2
+CascadedShadowMapping_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 CascadedShadowMapping_release_lflags    := $(CascadedShadowMapping_custom_lflags)
 CascadedShadowMapping_release_lflags    += $(addprefix -L, $(CascadedShadowMapping_release_lpaths))
 CascadedShadowMapping_release_lflags    += -Wl,--start-group $(addprefix -l, $(CascadedShadowMapping_release_libraries)) -Wl,--end-group

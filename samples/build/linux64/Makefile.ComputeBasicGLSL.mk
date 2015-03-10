@@ -54,14 +54,14 @@ ComputeBasicGLSL_debug_common_cflags    += $(addprefix -D, $(ComputeBasicGLSL_de
 ComputeBasicGLSL_debug_common_cflags    += $(addprefix -I, $(ComputeBasicGLSL_debug_hpaths))
 ComputeBasicGLSL_debug_common_cflags  += -m64
 ComputeBasicGLSL_debug_cflags	:= $(ComputeBasicGLSL_debug_common_cflags)
-ComputeBasicGLSL_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ComputeBasicGLSL_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ComputeBasicGLSL_debug_cflags  += -malign-double
-ComputeBasicGLSL_debug_cflags  += -g
+ComputeBasicGLSL_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeBasicGLSL_debug_cppflags	:= $(ComputeBasicGLSL_debug_common_cflags)
-ComputeBasicGLSL_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ComputeBasicGLSL_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ComputeBasicGLSL_debug_cppflags  += -Wno-reorder
 ComputeBasicGLSL_debug_cppflags  += -malign-double
-ComputeBasicGLSL_debug_cppflags  += -g
+ComputeBasicGLSL_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeBasicGLSL_debug_lflags    := $(ComputeBasicGLSL_custom_lflags)
 ComputeBasicGLSL_debug_lflags    += $(addprefix -L, $(ComputeBasicGLSL_debug_lpaths))
 ComputeBasicGLSL_debug_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeBasicGLSL_debug_libraries)) -Wl,--end-group
@@ -76,9 +76,9 @@ ComputeBasicGLSL_debug_obj      = $(ComputeBasicGLSL_debug_cpp_o) $(ComputeBasic
 ComputeBasicGLSL_debug_bin      := ./../../bin/linux64/ComputeBasicGLSLD
 
 clean_ComputeBasicGLSL_debug: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeBasicGLSL debug
-	$(SILENT_FLAG)$(RMDIR) $(ComputeBasicGLSL_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeBasicGLSL_debug_bin)
+	$(ECHO) clean ComputeBasicGLSL debug
+	$(RMDIR) $(ComputeBasicGLSL_debug_objsdir)
+	$(RMDIR) $(ComputeBasicGLSL_debug_bin)
 
 build_ComputeBasicGLSL_debug: postbuild_ComputeBasicGLSL_debug
 postbuild_ComputeBasicGLSL_debug: mainbuild_ComputeBasicGLSL_debug
@@ -86,37 +86,37 @@ mainbuild_ComputeBasicGLSL_debug: prebuild_ComputeBasicGLSL_debug $(ComputeBasic
 prebuild_ComputeBasicGLSL_debug:
 
 $(ComputeBasicGLSL_debug_bin): $(ComputeBasicGLSL_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/ComputeBasicGLSLD`
-	$(SILENT_FLAG)$(CCLD) $(ComputeBasicGLSL_debug_obj) $(ComputeBasicGLSL_debug_lflags) -o $(ComputeBasicGLSL_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/ComputeBasicGLSLD`
+	$(CCLD) $(ComputeBasicGLSL_debug_obj) $(ComputeBasicGLSL_debug_lflags) -o $(ComputeBasicGLSL_debug_bin) 
+	$(ECHO) building $@ complete!
 
 ComputeBasicGLSL_debug_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeBasicGLSL_debug_cpp_o): $(ComputeBasicGLSL_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeBasicGLSL_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).debug.P; \
+	$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeBasicGLSL_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))))
+	cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).debug.P; \
 	  rm -f $(ComputeBasicGLSL_debug_DEPDIR).d
 
 $(ComputeBasicGLSL_debug_cc_o): $(ComputeBasicGLSL_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeBasicGLSL_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).debug.P; \
+	$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeBasicGLSL_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))))
+	cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).debug.P; \
 	  rm -f $(ComputeBasicGLSL_debug_DEPDIR).d
 
 $(ComputeBasicGLSL_debug_c_o): $(ComputeBasicGLSL_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeBasicGLSL_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).debug.P; \
+	$(ECHO) ComputeBasicGLSL: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeBasicGLSL_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))))
+	cp $(ComputeBasicGLSL_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_debug_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).debug.P; \
 	  rm -f $(ComputeBasicGLSL_debug_DEPDIR).d
@@ -162,14 +162,14 @@ ComputeBasicGLSL_release_common_cflags    += $(addprefix -D, $(ComputeBasicGLSL_
 ComputeBasicGLSL_release_common_cflags    += $(addprefix -I, $(ComputeBasicGLSL_release_hpaths))
 ComputeBasicGLSL_release_common_cflags  += -m64
 ComputeBasicGLSL_release_cflags	:= $(ComputeBasicGLSL_release_common_cflags)
-ComputeBasicGLSL_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ComputeBasicGLSL_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ComputeBasicGLSL_release_cflags  += -malign-double
-ComputeBasicGLSL_release_cflags  += -O2
+ComputeBasicGLSL_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeBasicGLSL_release_cppflags	:= $(ComputeBasicGLSL_release_common_cflags)
-ComputeBasicGLSL_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ComputeBasicGLSL_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ComputeBasicGLSL_release_cppflags  += -Wno-reorder
 ComputeBasicGLSL_release_cppflags  += -malign-double
-ComputeBasicGLSL_release_cppflags  += -O2
+ComputeBasicGLSL_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeBasicGLSL_release_lflags    := $(ComputeBasicGLSL_custom_lflags)
 ComputeBasicGLSL_release_lflags    += $(addprefix -L, $(ComputeBasicGLSL_release_lpaths))
 ComputeBasicGLSL_release_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeBasicGLSL_release_libraries)) -Wl,--end-group
@@ -184,9 +184,9 @@ ComputeBasicGLSL_release_obj      = $(ComputeBasicGLSL_release_cpp_o) $(ComputeB
 ComputeBasicGLSL_release_bin      := ./../../bin/linux64/ComputeBasicGLSL
 
 clean_ComputeBasicGLSL_release: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeBasicGLSL release
-	$(SILENT_FLAG)$(RMDIR) $(ComputeBasicGLSL_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeBasicGLSL_release_bin)
+	$(ECHO) clean ComputeBasicGLSL release
+	$(RMDIR) $(ComputeBasicGLSL_release_objsdir)
+	$(RMDIR) $(ComputeBasicGLSL_release_bin)
 
 build_ComputeBasicGLSL_release: postbuild_ComputeBasicGLSL_release
 postbuild_ComputeBasicGLSL_release: mainbuild_ComputeBasicGLSL_release
@@ -194,40 +194,45 @@ mainbuild_ComputeBasicGLSL_release: prebuild_ComputeBasicGLSL_release $(ComputeB
 prebuild_ComputeBasicGLSL_release:
 
 $(ComputeBasicGLSL_release_bin): $(ComputeBasicGLSL_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/ComputeBasicGLSL`
-	$(SILENT_FLAG)$(CCLD) $(ComputeBasicGLSL_release_obj) $(ComputeBasicGLSL_release_lflags) -o $(ComputeBasicGLSL_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/ComputeBasicGLSL`
+	$(CCLD) $(ComputeBasicGLSL_release_obj) $(ComputeBasicGLSL_release_lflags) -o $(ComputeBasicGLSL_release_bin) 
+	$(ECHO) building $@ complete!
 
 ComputeBasicGLSL_release_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeBasicGLSL_release_cpp_o): $(ComputeBasicGLSL_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeBasicGLSL_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).release.P; \
+	$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeBasicGLSL_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))))
+	cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cppfiles))))).release.P; \
 	  rm -f $(ComputeBasicGLSL_release_DEPDIR).d
 
 $(ComputeBasicGLSL_release_cc_o): $(ComputeBasicGLSL_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeBasicGLSL_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).release.P; \
+	$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeBasicGLSL_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))))
+	cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_ccfiles))))).release.P; \
 	  rm -f $(ComputeBasicGLSL_release_DEPDIR).d
 
 $(ComputeBasicGLSL_release_c_o): $(ComputeBasicGLSL_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeBasicGLSL_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).release.P; \
+	$(ECHO) ComputeBasicGLSL: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeBasicGLSL_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))))
+	cp $(ComputeBasicGLSL_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeBasicGLSL_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeBasicGLSL_release_objsdir),, $@))), $(ComputeBasicGLSL_cfiles))))).release.P; \
 	  rm -f $(ComputeBasicGLSL_release_DEPDIR).d
 
 clean_ComputeBasicGLSL:  clean_ComputeBasicGLSL_debug clean_ComputeBasicGLSL_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

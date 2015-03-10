@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        es3aep-kepler/TerrainTessellation/assets/shaders/terrain_fragment.glsl
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -84,15 +84,15 @@ vec3 shadeTerrain(vec3 vertex,
                   )
 {
     const float shininess = 100.0;
-    const vec3 ambientColor = { 0.05, 0.05, 0.15 };
+    const vec3 ambientColor = vec3(0.05, 0.05, 0.15 );
     const float wrap = 0.3;
 
-    vec3 rockColor = { 0.4, 0.4, 0.4 };
-    vec3 snowColor = { 0.9, 0.9, 1.0 };
-    vec3 grassColor = { 77.0 / 255.0, 100.0 / 255.0, 42.0 / 255.0 };
-    vec3 brownColor = { 82.0 / 255.0, 70.0 / 255.0, 30.0 / 255.0 };
-    vec3 waterColor = { 0.2, 0.4, 0.5 };
-    vec3 treeColor = { 0.0, 0.2, 0.0 };
+    vec3 rockColor = vec3(0.4, 0.4, 0.4 );
+    vec3 snowColor = vec3(0.9, 0.9, 1.0 );
+    vec3 grassColor = vec3(77.0 / 255.0, 100.0 / 255.0, 42.0 / 255.0 );
+    vec3 brownColor = vec3(82.0 / 255.0, 70.0 / 255.0, 30.0 / 255.0 );
+    vec3 waterColor = vec3(0.2, 0.4, 0.5 );
+    vec3 treeColor = vec3(0.0, 0.2, 0.0 );
 
     //vec3 noisePos = vertex.xyz + vec3(translate.x, 0.0, translate.y);
     vec3 noisePos = vertex.xyz;

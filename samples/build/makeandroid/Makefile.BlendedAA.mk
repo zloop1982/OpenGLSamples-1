@@ -57,9 +57,11 @@ BlendedAA_debug_common_cflags    += -MMD
 BlendedAA_debug_common_cflags    += $(addprefix -D, $(BlendedAA_debug_defines))
 BlendedAA_debug_common_cflags    += $(addprefix -I, $(BlendedAA_debug_hpaths))
 BlendedAA_debug_cflags	:= $(BlendedAA_debug_common_cflags)
-BlendedAA_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 BlendedAA_debug_cppflags	:= $(BlendedAA_debug_common_cflags)
-BlendedAA_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 BlendedAA_debug_lflags    := $(BlendedAA_custom_lflags)
 BlendedAA_debug_lflags    += $(addprefix -L, $(BlendedAA_debug_lpaths))
 BlendedAA_debug_lflags    += -Wl,--start-group $(addprefix -l, $(BlendedAA_debug_libraries)) -Wl,--end-group
@@ -72,9 +74,9 @@ BlendedAA_debug_obj      = $(BlendedAA_debug_cpp_o) $(BlendedAA_debug_cc_o) $(Bl
 BlendedAA_debug_bin      := ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so
 
 clean_BlendedAA_debug: 
-	$(SILENT_FLAG)$(ECHO) clean BlendedAA debug
-	$(SILENT_FLAG)$(RMDIR) $(BlendedAA_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(BlendedAA_debug_bin)
+	$(ECHO) clean BlendedAA debug
+	$(RMDIR) $(BlendedAA_debug_objsdir)
+	$(RMDIR) $(BlendedAA_debug_bin)
 
 build_BlendedAA_debug: postbuild_BlendedAA_debug
 postbuild_BlendedAA_debug: mainbuild_BlendedAA_debug preantbuild_BlendedAA_debug antbuild_BlendedAA_debug
@@ -85,37 +87,37 @@ mainbuild_BlendedAA_debug: prebuild_BlendedAA_debug $(BlendedAA_debug_bin)
 prebuild_BlendedAA_debug:
 
 $(BlendedAA_debug_bin): $(BlendedAA_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so`
-	$(SILENT_FLAG)$(CXX) -shared $(BlendedAA_debug_obj) $(BlendedAA_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so`
+	$(CXX) -shared $(BlendedAA_debug_obj) $(BlendedAA_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 BlendedAA_debug_DEPDIR = $(dir $(@))/$(*F)
 $(BlendedAA_debug_cpp_o): $(BlendedAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BlendedAA_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))))).debug.P; \
+	$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BlendedAA_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))))))
+	cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cppfiles))))).debug.P; \
 	  rm -f $(BlendedAA_debug_DEPDIR).d
 
 $(BlendedAA_debug_cc_o): $(BlendedAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BlendedAA_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))))).debug.P; \
+	$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BlendedAA_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))))))
+	cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_ccfiles))))).debug.P; \
 	  rm -f $(BlendedAA_debug_DEPDIR).d
 
 $(BlendedAA_debug_c_o): $(BlendedAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(BlendedAA_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))))).debug.P; \
+	$(ECHO) BlendedAA: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(BlendedAA_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))))))
+	cp $(BlendedAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_debug_objsdir),, $@))), $(BlendedAA_cfiles))))).debug.P; \
 	  rm -f $(BlendedAA_debug_DEPDIR).d
@@ -164,9 +166,11 @@ BlendedAA_release_common_cflags    += -MMD
 BlendedAA_release_common_cflags    += $(addprefix -D, $(BlendedAA_release_defines))
 BlendedAA_release_common_cflags    += $(addprefix -I, $(BlendedAA_release_hpaths))
 BlendedAA_release_cflags	:= $(BlendedAA_release_common_cflags)
-BlendedAA_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 BlendedAA_release_cppflags	:= $(BlendedAA_release_common_cflags)
-BlendedAA_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+BlendedAA_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 BlendedAA_release_lflags    := $(BlendedAA_custom_lflags)
 BlendedAA_release_lflags    += $(addprefix -L, $(BlendedAA_release_lpaths))
 BlendedAA_release_lflags    += -Wl,--start-group $(addprefix -l, $(BlendedAA_release_libraries)) -Wl,--end-group
@@ -179,9 +183,9 @@ BlendedAA_release_obj      = $(BlendedAA_release_cpp_o) $(BlendedAA_release_cc_o
 BlendedAA_release_bin      := ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so
 
 clean_BlendedAA_release: 
-	$(SILENT_FLAG)$(ECHO) clean BlendedAA release
-	$(SILENT_FLAG)$(RMDIR) $(BlendedAA_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(BlendedAA_release_bin)
+	$(ECHO) clean BlendedAA release
+	$(RMDIR) $(BlendedAA_release_objsdir)
+	$(RMDIR) $(BlendedAA_release_bin)
 
 build_BlendedAA_release: postbuild_BlendedAA_release
 postbuild_BlendedAA_release: mainbuild_BlendedAA_release preantbuild_BlendedAA_release antbuild_BlendedAA_release
@@ -192,40 +196,45 @@ mainbuild_BlendedAA_release: prebuild_BlendedAA_release $(BlendedAA_release_bin)
 prebuild_BlendedAA_release:
 
 $(BlendedAA_release_bin): $(BlendedAA_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so`
-	$(SILENT_FLAG)$(CXX) -shared $(BlendedAA_release_obj) $(BlendedAA_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-maxwell/BlendedAA/libs/armeabi-v7a/libBlendedAA.so`
+	$(CXX) -shared $(BlendedAA_release_obj) $(BlendedAA_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 BlendedAA_release_DEPDIR = $(dir $(@))/$(*F)
 $(BlendedAA_release_cpp_o): $(BlendedAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BlendedAA_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))))).release.P; \
+	$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BlendedAA_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))))))
+	cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cppfiles))))).release.P; \
 	  rm -f $(BlendedAA_release_DEPDIR).d
 
 $(BlendedAA_release_cc_o): $(BlendedAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(BlendedAA_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))))).release.P; \
+	$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(BlendedAA_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))))))
+	cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_ccfiles))))).release.P; \
 	  rm -f $(BlendedAA_release_DEPDIR).d
 
 $(BlendedAA_release_c_o): $(BlendedAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(BlendedAA_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))))))
-	$(SILENT_FLAG)cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))))).release.P; \
+	$(ECHO) BlendedAA: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(BlendedAA_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))))))
+	cp $(BlendedAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(BlendedAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(BlendedAA_release_objsdir),, $@))), $(BlendedAA_cfiles))))).release.P; \
 	  rm -f $(BlendedAA_release_DEPDIR).d
 
 clean_BlendedAA:  clean_BlendedAA_debug clean_BlendedAA_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

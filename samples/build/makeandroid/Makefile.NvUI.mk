@@ -48,9 +48,11 @@ NvUI_debug_common_cflags    += -MMD
 NvUI_debug_common_cflags    += $(addprefix -D, $(NvUI_debug_defines))
 NvUI_debug_common_cflags    += $(addprefix -I, $(NvUI_debug_hpaths))
 NvUI_debug_cflags	:= $(NvUI_debug_common_cflags)
-NvUI_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvUI_debug_cppflags	:= $(NvUI_debug_common_cflags)
-NvUI_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 NvUI_debug_lflags    := $(NvUI_custom_lflags)
 NvUI_debug_lflags    += $(addprefix -L, $(NvUI_debug_lpaths))
 NvUI_debug_lflags    += -Wl,--start-group $(addprefix -l, $(NvUI_debug_libraries)) -Wl,--end-group
@@ -62,9 +64,9 @@ NvUI_debug_obj      = $(NvUI_debug_cpp_o) $(NvUI_debug_cc_o) $(NvUI_debug_c_o)
 NvUI_debug_bin      := ./../../../extensions/lib/Tegra-Android/libNvUID.a
 
 clean_NvUI_debug: 
-	$(SILENT_FLAG)$(ECHO) clean NvUI debug
-	$(SILENT_FLAG)$(RMDIR) $(NvUI_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvUI_debug_bin)
+	$(ECHO) clean NvUI debug
+	$(RMDIR) $(NvUI_debug_objsdir)
+	$(RMDIR) $(NvUI_debug_bin)
 
 build_NvUI_debug: postbuild_NvUI_debug
 postbuild_NvUI_debug: mainbuild_NvUI_debug
@@ -72,37 +74,37 @@ mainbuild_NvUI_debug: prebuild_NvUI_debug $(NvUI_debug_bin)
 prebuild_NvUI_debug:
 
 $(NvUI_debug_bin): $(NvUI_debug_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvUID.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvUI_debug_bin) $(NvUI_debug_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvUID.a`
+	$(AR) rcs $(NvUI_debug_bin) $(NvUI_debug_obj)
+	$(ECHO) building $@ complete!
 
 NvUI_debug_DEPDIR = $(dir $(@))/$(*F)
 $(NvUI_debug_cpp_o): $(NvUI_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvUI_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))))).debug.P; \
+	$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvUI_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))))))
+	cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cppfiles))))).debug.P; \
 	  rm -f $(NvUI_debug_DEPDIR).d
 
 $(NvUI_debug_cc_o): $(NvUI_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvUI_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))))).debug.P; \
+	$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvUI_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))))))
+	cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_ccfiles))))).debug.P; \
 	  rm -f $(NvUI_debug_DEPDIR).d
 
 $(NvUI_debug_c_o): $(NvUI_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvUI_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))))).debug.P; \
+	$(ECHO) NvUI: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvUI_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))))))
+	cp $(NvUI_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_debug_objsdir),, $@))), $(NvUI_cfiles))))).debug.P; \
 	  rm -f $(NvUI_debug_DEPDIR).d
@@ -126,9 +128,11 @@ NvUI_release_common_cflags    += -MMD
 NvUI_release_common_cflags    += $(addprefix -D, $(NvUI_release_defines))
 NvUI_release_common_cflags    += $(addprefix -I, $(NvUI_release_hpaths))
 NvUI_release_cflags	:= $(NvUI_release_common_cflags)
-NvUI_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvUI_release_cppflags	:= $(NvUI_release_common_cflags)
-NvUI_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+NvUI_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 NvUI_release_lflags    := $(NvUI_custom_lflags)
 NvUI_release_lflags    += $(addprefix -L, $(NvUI_release_lpaths))
 NvUI_release_lflags    += -Wl,--start-group $(addprefix -l, $(NvUI_release_libraries)) -Wl,--end-group
@@ -140,9 +144,9 @@ NvUI_release_obj      = $(NvUI_release_cpp_o) $(NvUI_release_cc_o) $(NvUI_releas
 NvUI_release_bin      := ./../../../extensions/lib/Tegra-Android/libNvUI.a
 
 clean_NvUI_release: 
-	$(SILENT_FLAG)$(ECHO) clean NvUI release
-	$(SILENT_FLAG)$(RMDIR) $(NvUI_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(NvUI_release_bin)
+	$(ECHO) clean NvUI release
+	$(RMDIR) $(NvUI_release_objsdir)
+	$(RMDIR) $(NvUI_release_bin)
 
 build_NvUI_release: postbuild_NvUI_release
 postbuild_NvUI_release: mainbuild_NvUI_release
@@ -150,40 +154,45 @@ mainbuild_NvUI_release: prebuild_NvUI_release $(NvUI_release_bin)
 prebuild_NvUI_release:
 
 $(NvUI_release_bin): $(NvUI_release_obj) 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvUI.a`
-	$(SILENT_FLAG)$(AR) rcs $(NvUI_release_bin) $(NvUI_release_obj)
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../../extensions/lib/Tegra-Android/libNvUI.a`
+	$(AR) rcs $(NvUI_release_bin) $(NvUI_release_obj)
+	$(ECHO) building $@ complete!
 
 NvUI_release_DEPDIR = $(dir $(@))/$(*F)
 $(NvUI_release_cpp_o): $(NvUI_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvUI_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))))).release.P; \
+	$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvUI_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))))))
+	cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cppfiles))))).release.P; \
 	  rm -f $(NvUI_release_DEPDIR).d
 
 $(NvUI_release_cc_o): $(NvUI_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(NvUI_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))))).release.P; \
+	$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(NvUI_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))))))
+	cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_ccfiles))))).release.P; \
 	  rm -f $(NvUI_release_DEPDIR).d
 
 $(NvUI_release_c_o): $(NvUI_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(NvUI_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))))))
-	$(SILENT_FLAG)cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))))).release.P; \
+	$(ECHO) NvUI: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(NvUI_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))))))
+	cp $(NvUI_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(NvUI_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(NvUI_release_objsdir),, $@))), $(NvUI_cfiles))))).release.P; \
 	  rm -f $(NvUI_release_DEPDIR).d
 
 clean_NvUI:  clean_NvUI_debug clean_NvUI_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

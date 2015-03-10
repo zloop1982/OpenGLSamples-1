@@ -58,9 +58,11 @@ TerrainTessellation_debug_common_cflags    += -MMD
 TerrainTessellation_debug_common_cflags    += $(addprefix -D, $(TerrainTessellation_debug_defines))
 TerrainTessellation_debug_common_cflags    += $(addprefix -I, $(TerrainTessellation_debug_hpaths))
 TerrainTessellation_debug_cflags	:= $(TerrainTessellation_debug_common_cflags)
-TerrainTessellation_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 TerrainTessellation_debug_cppflags	:= $(TerrainTessellation_debug_common_cflags)
-TerrainTessellation_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 TerrainTessellation_debug_lflags    := $(TerrainTessellation_custom_lflags)
 TerrainTessellation_debug_lflags    += $(addprefix -L, $(TerrainTessellation_debug_lpaths))
 TerrainTessellation_debug_lflags    += -Wl,--start-group $(addprefix -l, $(TerrainTessellation_debug_libraries)) -Wl,--end-group
@@ -73,9 +75,9 @@ TerrainTessellation_debug_obj      = $(TerrainTessellation_debug_cpp_o) $(Terrai
 TerrainTessellation_debug_bin      := ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so
 
 clean_TerrainTessellation_debug: 
-	$(SILENT_FLAG)$(ECHO) clean TerrainTessellation debug
-	$(SILENT_FLAG)$(RMDIR) $(TerrainTessellation_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(TerrainTessellation_debug_bin)
+	$(ECHO) clean TerrainTessellation debug
+	$(RMDIR) $(TerrainTessellation_debug_objsdir)
+	$(RMDIR) $(TerrainTessellation_debug_bin)
 
 build_TerrainTessellation_debug: postbuild_TerrainTessellation_debug
 postbuild_TerrainTessellation_debug: mainbuild_TerrainTessellation_debug preantbuild_TerrainTessellation_debug antbuild_TerrainTessellation_debug
@@ -86,37 +88,37 @@ mainbuild_TerrainTessellation_debug: prebuild_TerrainTessellation_debug $(Terrai
 prebuild_TerrainTessellation_debug:
 
 $(TerrainTessellation_debug_bin): $(TerrainTessellation_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so`
-	$(SILENT_FLAG)$(CXX) -shared $(TerrainTessellation_debug_obj) $(TerrainTessellation_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so`
+	$(CXX) -shared $(TerrainTessellation_debug_obj) $(TerrainTessellation_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 TerrainTessellation_debug_DEPDIR = $(dir $(@))/$(*F)
 $(TerrainTessellation_debug_cpp_o): $(TerrainTessellation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TerrainTessellation_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).debug.P; \
+	$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TerrainTessellation_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))))))
+	cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).debug.P; \
 	  rm -f $(TerrainTessellation_debug_DEPDIR).d
 
 $(TerrainTessellation_debug_cc_o): $(TerrainTessellation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TerrainTessellation_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).debug.P; \
+	$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TerrainTessellation_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))))))
+	cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).debug.P; \
 	  rm -f $(TerrainTessellation_debug_DEPDIR).d
 
 $(TerrainTessellation_debug_c_o): $(TerrainTessellation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(TerrainTessellation_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))))).debug.P; \
+	$(ECHO) TerrainTessellation: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(TerrainTessellation_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))))))
+	cp $(TerrainTessellation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_debug_objsdir),, $@))), $(TerrainTessellation_cfiles))))).debug.P; \
 	  rm -f $(TerrainTessellation_debug_DEPDIR).d
@@ -165,9 +167,11 @@ TerrainTessellation_release_common_cflags    += -MMD
 TerrainTessellation_release_common_cflags    += $(addprefix -D, $(TerrainTessellation_release_defines))
 TerrainTessellation_release_common_cflags    += $(addprefix -I, $(TerrainTessellation_release_hpaths))
 TerrainTessellation_release_cflags	:= $(TerrainTessellation_release_common_cflags)
-TerrainTessellation_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 TerrainTessellation_release_cppflags	:= $(TerrainTessellation_release_common_cflags)
-TerrainTessellation_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+TerrainTessellation_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 TerrainTessellation_release_lflags    := $(TerrainTessellation_custom_lflags)
 TerrainTessellation_release_lflags    += $(addprefix -L, $(TerrainTessellation_release_lpaths))
 TerrainTessellation_release_lflags    += -Wl,--start-group $(addprefix -l, $(TerrainTessellation_release_libraries)) -Wl,--end-group
@@ -180,9 +184,9 @@ TerrainTessellation_release_obj      = $(TerrainTessellation_release_cpp_o) $(Te
 TerrainTessellation_release_bin      := ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so
 
 clean_TerrainTessellation_release: 
-	$(SILENT_FLAG)$(ECHO) clean TerrainTessellation release
-	$(SILENT_FLAG)$(RMDIR) $(TerrainTessellation_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(TerrainTessellation_release_bin)
+	$(ECHO) clean TerrainTessellation release
+	$(RMDIR) $(TerrainTessellation_release_objsdir)
+	$(RMDIR) $(TerrainTessellation_release_bin)
 
 build_TerrainTessellation_release: postbuild_TerrainTessellation_release
 postbuild_TerrainTessellation_release: mainbuild_TerrainTessellation_release preantbuild_TerrainTessellation_release antbuild_TerrainTessellation_release
@@ -193,40 +197,45 @@ mainbuild_TerrainTessellation_release: prebuild_TerrainTessellation_release $(Te
 prebuild_TerrainTessellation_release:
 
 $(TerrainTessellation_release_bin): $(TerrainTessellation_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so`
-	$(SILENT_FLAG)$(CXX) -shared $(TerrainTessellation_release_obj) $(TerrainTessellation_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/TerrainTessellation/libs/armeabi-v7a/libTerrainTessellation.so`
+	$(CXX) -shared $(TerrainTessellation_release_obj) $(TerrainTessellation_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 TerrainTessellation_release_DEPDIR = $(dir $(@))/$(*F)
 $(TerrainTessellation_release_cpp_o): $(TerrainTessellation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TerrainTessellation_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).release.P; \
+	$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TerrainTessellation_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))))))
+	cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cppfiles))))).release.P; \
 	  rm -f $(TerrainTessellation_release_DEPDIR).d
 
 $(TerrainTessellation_release_cc_o): $(TerrainTessellation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TerrainTessellation_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).release.P; \
+	$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TerrainTessellation_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))))))
+	cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_ccfiles))))).release.P; \
 	  rm -f $(TerrainTessellation_release_DEPDIR).d
 
 $(TerrainTessellation_release_c_o): $(TerrainTessellation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(TerrainTessellation_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))))))
-	$(SILENT_FLAG)cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))))).release.P; \
+	$(ECHO) TerrainTessellation: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(TerrainTessellation_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))))))
+	cp $(TerrainTessellation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TerrainTessellation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TerrainTessellation_release_objsdir),, $@))), $(TerrainTessellation_cfiles))))).release.P; \
 	  rm -f $(TerrainTessellation_release_DEPDIR).d
 
 clean_TerrainTessellation:  clean_TerrainTessellation_debug clean_TerrainTessellation_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

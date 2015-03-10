@@ -23,7 +23,9 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-18</AndroidTargetAPI>
+		<AndroidTargetAPI>android-21</AndroidTargetAPI>
+		<AndroidMinAPI>android-18</AndroidMinAPI>
+		<AndroidNativeAPI>android-18</AndroidNativeAPI>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'" Label="Configuration">
 		<ConfigurationType>Application</ConfigurationType>
@@ -31,7 +33,9 @@
 		<PlatformToolset>arm-linux-androideabi-4.8</PlatformToolset>
 		<AndroidArch>armv7-a</AndroidArch>
 		<AndroidStlType>gnustl_static</AndroidStlType>
-		<AndroidTargetAPI>android-18</AndroidTargetAPI>
+		<AndroidTargetAPI>android-21</AndroidTargetAPI>
+		<AndroidMinAPI>android-18</AndroidMinAPI>
+		<AndroidNativeAPI>android-18</AndroidNativeAPI>
 	</PropertyGroup>
 	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
 	<ImportGroup Label="ExtensionSettings">
@@ -54,9 +58,10 @@
 	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|Tegra-Android'">
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
+			<AdditionalOptions>-funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../es3-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1_AEP;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
@@ -70,7 +75,7 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../es3-kepler/HDR</AntBuildPath>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/HDR</AntBuildPath>
 			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
@@ -93,9 +98,10 @@
 	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 		<ClCompile>
 			<FloatingPointModel>Precise</FloatingPointModel>
+			<AdditionalOptions>-funwind-tables -O2 -fno-omit-frame-pointer</AdditionalOptions>
 			<Optimization>Disabled</Optimization>
-			<AdditionalIncludeDirectories>./../../es3-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<AdditionalIncludeDirectories>./../../es3aep-kepler/HDR;./../../../extensions/include;./../../../extensions/externals/include;./../../../../../../../../../../../../../platforms/android-18/arch-arm/usr/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/libs/armeabi-v7a/include;./../../../../../../../../../../../../../sources/cxx-stl/gnu-libstdc++/include/backward;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+			<PreprocessorDefinitions>android;ANDROID;GL_API_LEVEL_ES3_1_AEP;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
 			<WarningLevel>Level3</WarningLevel>
 			<PrecompiledHeader>NotUsing</PrecompiledHeader>
 			<PrecompiledHeaderFile></PrecompiledHeaderFile>
@@ -109,7 +115,7 @@
 			<ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
 		</Link>
 		<AntBuild>
-			<AntBuildPath>$(ProjectDir)./../../es3-kepler/HDR</AntBuildPath>
+			<AntBuildPath>$(ProjectDir)./../../es3aep-kepler/HDR</AntBuildPath>
 			<JavaSourceDir>src/../../../../extensions/src/NvAppBase/java;src</JavaSourceDir>
 			<AntBuildType>Debug</AntBuildType>
 			<AntLibraryName>$(TargetName)</AntLibraryName>
@@ -125,45 +131,45 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|Tegra-Android'">
 	</PropertyGroup>
 	<ItemGroup>
-		<ClCompile Include="..\..\es3-kepler\HDR\BlurShaderGenerator.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\BlurShaderGenerator.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\FileLoader.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\FileLoader.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\HDR.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\HDR.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\HDRImages.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\HDRImages.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\RenderTexture.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\RenderTexture.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\ShaderObject.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\ShaderObject.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\VertexBufferObject.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\VertexBufferObject.cpp">
 		</ClCompile>
-		<ClCompile Include="..\..\es3-kepler\HDR\rgbe.cpp">
+		<ClCompile Include="..\..\es3aep-kepler\HDR\rgbe.cpp">
 		</ClCompile>
-		<ClInclude Include="..\..\es3-kepler\HDR\AppExtensions.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\AppExtensions.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\BlurShaderGenerator.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\BlurShaderGenerator.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\ColorModulation.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\ColorModulation.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\CubeData.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\CubeData.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\FileLoader.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\FileLoader.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\HDR.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\HDR.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\HDRImages.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\HDRImages.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\RenderTexture.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\RenderTexture.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\ShaderDeclaration.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\ShaderDeclaration.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\ShaderObject.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\ShaderObject.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\VertexBufferObject.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\VertexBufferObject.h">
 		</ClInclude>
-		<ClInclude Include="..\..\es3-kepler\HDR\rgbe.h">
+		<ClInclude Include="..\..\es3aep-kepler\HDR\rgbe.h">
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>

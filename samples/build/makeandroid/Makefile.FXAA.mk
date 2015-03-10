@@ -56,9 +56,11 @@ FXAA_debug_common_cflags    += -MMD
 FXAA_debug_common_cflags    += $(addprefix -D, $(FXAA_debug_defines))
 FXAA_debug_common_cflags    += $(addprefix -I, $(FXAA_debug_hpaths))
 FXAA_debug_cflags	:= $(FXAA_debug_common_cflags)
-FXAA_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 FXAA_debug_cppflags	:= $(FXAA_debug_common_cflags)
-FXAA_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 FXAA_debug_lflags    := $(FXAA_custom_lflags)
 FXAA_debug_lflags    += $(addprefix -L, $(FXAA_debug_lpaths))
 FXAA_debug_lflags    += -Wl,--start-group $(addprefix -l, $(FXAA_debug_libraries)) -Wl,--end-group
@@ -71,9 +73,9 @@ FXAA_debug_obj      = $(FXAA_debug_cpp_o) $(FXAA_debug_cc_o) $(FXAA_debug_c_o)
 FXAA_debug_bin      := ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so
 
 clean_FXAA_debug: 
-	$(SILENT_FLAG)$(ECHO) clean FXAA debug
-	$(SILENT_FLAG)$(RMDIR) $(FXAA_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(FXAA_debug_bin)
+	$(ECHO) clean FXAA debug
+	$(RMDIR) $(FXAA_debug_objsdir)
+	$(RMDIR) $(FXAA_debug_bin)
 
 build_FXAA_debug: postbuild_FXAA_debug
 postbuild_FXAA_debug: mainbuild_FXAA_debug preantbuild_FXAA_debug antbuild_FXAA_debug
@@ -84,37 +86,37 @@ mainbuild_FXAA_debug: prebuild_FXAA_debug $(FXAA_debug_bin)
 prebuild_FXAA_debug:
 
 $(FXAA_debug_bin): $(FXAA_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so`
-	$(SILENT_FLAG)$(CXX) -shared $(FXAA_debug_obj) $(FXAA_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so`
+	$(CXX) -shared $(FXAA_debug_obj) $(FXAA_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 FXAA_debug_DEPDIR = $(dir $(@))/$(*F)
 $(FXAA_debug_cpp_o): $(FXAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FXAA_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))))).debug.P; \
+	$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FXAA_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))))))
+	cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cppfiles))))).debug.P; \
 	  rm -f $(FXAA_debug_DEPDIR).d
 
 $(FXAA_debug_cc_o): $(FXAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FXAA_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))))).debug.P; \
+	$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FXAA_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))))))
+	cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_ccfiles))))).debug.P; \
 	  rm -f $(FXAA_debug_DEPDIR).d
 
 $(FXAA_debug_c_o): $(FXAA_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(FXAA_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))))).debug.P; \
+	$(ECHO) FXAA: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(FXAA_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))))))
+	cp $(FXAA_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_debug_objsdir),, $@))), $(FXAA_cfiles))))).debug.P; \
 	  rm -f $(FXAA_debug_DEPDIR).d
@@ -162,9 +164,11 @@ FXAA_release_common_cflags    += -MMD
 FXAA_release_common_cflags    += $(addprefix -D, $(FXAA_release_defines))
 FXAA_release_common_cflags    += $(addprefix -I, $(FXAA_release_hpaths))
 FXAA_release_cflags	:= $(FXAA_release_common_cflags)
-FXAA_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 FXAA_release_cppflags	:= $(FXAA_release_common_cflags)
-FXAA_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+FXAA_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 FXAA_release_lflags    := $(FXAA_custom_lflags)
 FXAA_release_lflags    += $(addprefix -L, $(FXAA_release_lpaths))
 FXAA_release_lflags    += -Wl,--start-group $(addprefix -l, $(FXAA_release_libraries)) -Wl,--end-group
@@ -177,9 +181,9 @@ FXAA_release_obj      = $(FXAA_release_cpp_o) $(FXAA_release_cc_o) $(FXAA_releas
 FXAA_release_bin      := ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so
 
 clean_FXAA_release: 
-	$(SILENT_FLAG)$(ECHO) clean FXAA release
-	$(SILENT_FLAG)$(RMDIR) $(FXAA_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(FXAA_release_bin)
+	$(ECHO) clean FXAA release
+	$(RMDIR) $(FXAA_release_objsdir)
+	$(RMDIR) $(FXAA_release_bin)
 
 build_FXAA_release: postbuild_FXAA_release
 postbuild_FXAA_release: mainbuild_FXAA_release preantbuild_FXAA_release antbuild_FXAA_release
@@ -190,40 +194,45 @@ mainbuild_FXAA_release: prebuild_FXAA_release $(FXAA_release_bin)
 prebuild_FXAA_release:
 
 $(FXAA_release_bin): $(FXAA_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so`
-	$(SILENT_FLAG)$(CXX) -shared $(FXAA_release_obj) $(FXAA_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3-kepler/FXAA/libs/armeabi-v7a/libFXAA.so`
+	$(CXX) -shared $(FXAA_release_obj) $(FXAA_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 FXAA_release_DEPDIR = $(dir $(@))/$(*F)
 $(FXAA_release_cpp_o): $(FXAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FXAA_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))))).release.P; \
+	$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FXAA_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))))))
+	cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cppfiles))))).release.P; \
 	  rm -f $(FXAA_release_DEPDIR).d
 
 $(FXAA_release_cc_o): $(FXAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(FXAA_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))))).release.P; \
+	$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(FXAA_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))))))
+	cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_ccfiles))))).release.P; \
 	  rm -f $(FXAA_release_DEPDIR).d
 
 $(FXAA_release_c_o): $(FXAA_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(FXAA_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))))))
-	$(SILENT_FLAG)cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))))).release.P; \
+	$(ECHO) FXAA: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(FXAA_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))))))
+	cp $(FXAA_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(FXAA_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(FXAA_release_objsdir),, $@))), $(FXAA_cfiles))))).release.P; \
 	  rm -f $(FXAA_release_DEPDIR).d
 
 clean_FXAA:  clean_FXAA_debug clean_FXAA_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

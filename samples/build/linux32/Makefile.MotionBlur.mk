@@ -52,14 +52,14 @@ MotionBlur_debug_common_cflags    += $(addprefix -D, $(MotionBlur_debug_defines)
 MotionBlur_debug_common_cflags    += $(addprefix -I, $(MotionBlur_debug_hpaths))
 MotionBlur_debug_common_cflags  += -m32
 MotionBlur_debug_cflags	:= $(MotionBlur_debug_common_cflags)
-MotionBlur_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MotionBlur_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MotionBlur_debug_cflags  += -malign-double
-MotionBlur_debug_cflags  += -g
+MotionBlur_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 MotionBlur_debug_cppflags	:= $(MotionBlur_debug_common_cflags)
-MotionBlur_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MotionBlur_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MotionBlur_debug_cppflags  += -Wno-reorder
 MotionBlur_debug_cppflags  += -malign-double
-MotionBlur_debug_cppflags  += -g
+MotionBlur_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 MotionBlur_debug_lflags    := $(MotionBlur_custom_lflags)
 MotionBlur_debug_lflags    += $(addprefix -L, $(MotionBlur_debug_lpaths))
 MotionBlur_debug_lflags    += -Wl,--start-group $(addprefix -l, $(MotionBlur_debug_libraries)) -Wl,--end-group
@@ -73,9 +73,9 @@ MotionBlur_debug_obj      = $(MotionBlur_debug_cpp_o) $(MotionBlur_debug_cc_o) $
 MotionBlur_debug_bin      := ./../../bin/linux32/MotionBlurD
 
 clean_MotionBlur_debug: 
-	$(SILENT_FLAG)$(ECHO) clean MotionBlur debug
-	$(SILENT_FLAG)$(RMDIR) $(MotionBlur_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(MotionBlur_debug_bin)
+	$(ECHO) clean MotionBlur debug
+	$(RMDIR) $(MotionBlur_debug_objsdir)
+	$(RMDIR) $(MotionBlur_debug_bin)
 
 build_MotionBlur_debug: postbuild_MotionBlur_debug
 postbuild_MotionBlur_debug: mainbuild_MotionBlur_debug
@@ -83,37 +83,37 @@ mainbuild_MotionBlur_debug: prebuild_MotionBlur_debug $(MotionBlur_debug_bin)
 prebuild_MotionBlur_debug:
 
 $(MotionBlur_debug_bin): $(MotionBlur_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/MotionBlurD`
-	$(SILENT_FLAG)$(CCLD) $(MotionBlur_debug_obj) $(MotionBlur_debug_lflags) -o $(MotionBlur_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/MotionBlurD`
+	$(CCLD) $(MotionBlur_debug_obj) $(MotionBlur_debug_lflags) -o $(MotionBlur_debug_bin) 
+	$(ECHO) building $@ complete!
 
 MotionBlur_debug_DEPDIR = $(dir $(@))/$(*F)
 $(MotionBlur_debug_cpp_o): $(MotionBlur_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MotionBlur_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))))).debug.P; \
+	$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MotionBlur_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))))))
+	cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cppfiles))))).debug.P; \
 	  rm -f $(MotionBlur_debug_DEPDIR).d
 
 $(MotionBlur_debug_cc_o): $(MotionBlur_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MotionBlur_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))))).debug.P; \
+	$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MotionBlur_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))))))
+	cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_ccfiles))))).debug.P; \
 	  rm -f $(MotionBlur_debug_DEPDIR).d
 
 $(MotionBlur_debug_c_o): $(MotionBlur_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(MotionBlur_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))))).debug.P; \
+	$(ECHO) MotionBlur: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(MotionBlur_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))))))
+	cp $(MotionBlur_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_debug_objsdir),, $@))), $(MotionBlur_cfiles))))).debug.P; \
 	  rm -f $(MotionBlur_debug_DEPDIR).d
@@ -157,14 +157,14 @@ MotionBlur_release_common_cflags    += $(addprefix -D, $(MotionBlur_release_defi
 MotionBlur_release_common_cflags    += $(addprefix -I, $(MotionBlur_release_hpaths))
 MotionBlur_release_common_cflags  += -m32
 MotionBlur_release_cflags	:= $(MotionBlur_release_common_cflags)
-MotionBlur_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MotionBlur_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MotionBlur_release_cflags  += -malign-double
-MotionBlur_release_cflags  += -O2
+MotionBlur_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 MotionBlur_release_cppflags	:= $(MotionBlur_release_common_cflags)
-MotionBlur_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+MotionBlur_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 MotionBlur_release_cppflags  += -Wno-reorder
 MotionBlur_release_cppflags  += -malign-double
-MotionBlur_release_cppflags  += -O2
+MotionBlur_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 MotionBlur_release_lflags    := $(MotionBlur_custom_lflags)
 MotionBlur_release_lflags    += $(addprefix -L, $(MotionBlur_release_lpaths))
 MotionBlur_release_lflags    += -Wl,--start-group $(addprefix -l, $(MotionBlur_release_libraries)) -Wl,--end-group
@@ -178,9 +178,9 @@ MotionBlur_release_obj      = $(MotionBlur_release_cpp_o) $(MotionBlur_release_c
 MotionBlur_release_bin      := ./../../bin/linux32/MotionBlur
 
 clean_MotionBlur_release: 
-	$(SILENT_FLAG)$(ECHO) clean MotionBlur release
-	$(SILENT_FLAG)$(RMDIR) $(MotionBlur_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(MotionBlur_release_bin)
+	$(ECHO) clean MotionBlur release
+	$(RMDIR) $(MotionBlur_release_objsdir)
+	$(RMDIR) $(MotionBlur_release_bin)
 
 build_MotionBlur_release: postbuild_MotionBlur_release
 postbuild_MotionBlur_release: mainbuild_MotionBlur_release
@@ -188,40 +188,45 @@ mainbuild_MotionBlur_release: prebuild_MotionBlur_release $(MotionBlur_release_b
 prebuild_MotionBlur_release:
 
 $(MotionBlur_release_bin): $(MotionBlur_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/MotionBlur`
-	$(SILENT_FLAG)$(CCLD) $(MotionBlur_release_obj) $(MotionBlur_release_lflags) -o $(MotionBlur_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/MotionBlur`
+	$(CCLD) $(MotionBlur_release_obj) $(MotionBlur_release_lflags) -o $(MotionBlur_release_bin) 
+	$(ECHO) building $@ complete!
 
 MotionBlur_release_DEPDIR = $(dir $(@))/$(*F)
 $(MotionBlur_release_cpp_o): $(MotionBlur_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MotionBlur_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))))).release.P; \
+	$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MotionBlur_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))))))
+	cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cppfiles))))).release.P; \
 	  rm -f $(MotionBlur_release_DEPDIR).d
 
 $(MotionBlur_release_cc_o): $(MotionBlur_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(MotionBlur_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))))).release.P; \
+	$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(MotionBlur_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))))))
+	cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_ccfiles))))).release.P; \
 	  rm -f $(MotionBlur_release_DEPDIR).d
 
 $(MotionBlur_release_c_o): $(MotionBlur_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(MotionBlur_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))))))
-	$(SILENT_FLAG)cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))))).release.P; \
+	$(ECHO) MotionBlur: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(MotionBlur_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))))))
+	cp $(MotionBlur_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(MotionBlur_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(MotionBlur_release_objsdir),, $@))), $(MotionBlur_cfiles))))).release.P; \
 	  rm -f $(MotionBlur_release_DEPDIR).d
 
 clean_MotionBlur:  clean_MotionBlur_debug clean_MotionBlur_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

@@ -57,9 +57,11 @@ WeightedBlendedOIT_debug_common_cflags    += -MMD
 WeightedBlendedOIT_debug_common_cflags    += $(addprefix -D, $(WeightedBlendedOIT_debug_defines))
 WeightedBlendedOIT_debug_common_cflags    += $(addprefix -I, $(WeightedBlendedOIT_debug_hpaths))
 WeightedBlendedOIT_debug_cflags	:= $(WeightedBlendedOIT_debug_common_cflags)
-WeightedBlendedOIT_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 WeightedBlendedOIT_debug_cppflags	:= $(WeightedBlendedOIT_debug_common_cflags)
-WeightedBlendedOIT_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 WeightedBlendedOIT_debug_lflags    := $(WeightedBlendedOIT_custom_lflags)
 WeightedBlendedOIT_debug_lflags    += $(addprefix -L, $(WeightedBlendedOIT_debug_lpaths))
 WeightedBlendedOIT_debug_lflags    += -Wl,--start-group $(addprefix -l, $(WeightedBlendedOIT_debug_libraries)) -Wl,--end-group
@@ -72,9 +74,9 @@ WeightedBlendedOIT_debug_obj      = $(WeightedBlendedOIT_debug_cpp_o) $(Weighted
 WeightedBlendedOIT_debug_bin      := ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so
 
 clean_WeightedBlendedOIT_debug: 
-	$(SILENT_FLAG)$(ECHO) clean WeightedBlendedOIT debug
-	$(SILENT_FLAG)$(RMDIR) $(WeightedBlendedOIT_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(WeightedBlendedOIT_debug_bin)
+	$(ECHO) clean WeightedBlendedOIT debug
+	$(RMDIR) $(WeightedBlendedOIT_debug_objsdir)
+	$(RMDIR) $(WeightedBlendedOIT_debug_bin)
 
 build_WeightedBlendedOIT_debug: postbuild_WeightedBlendedOIT_debug
 postbuild_WeightedBlendedOIT_debug: mainbuild_WeightedBlendedOIT_debug preantbuild_WeightedBlendedOIT_debug antbuild_WeightedBlendedOIT_debug
@@ -85,37 +87,37 @@ mainbuild_WeightedBlendedOIT_debug: prebuild_WeightedBlendedOIT_debug $(Weighted
 prebuild_WeightedBlendedOIT_debug:
 
 $(WeightedBlendedOIT_debug_bin): $(WeightedBlendedOIT_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so`
-	$(SILENT_FLAG)$(CXX) -shared $(WeightedBlendedOIT_debug_obj) $(WeightedBlendedOIT_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so`
+	$(CXX) -shared $(WeightedBlendedOIT_debug_obj) $(WeightedBlendedOIT_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 WeightedBlendedOIT_debug_DEPDIR = $(dir $(@))/$(*F)
 $(WeightedBlendedOIT_debug_cpp_o): $(WeightedBlendedOIT_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(WeightedBlendedOIT_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).debug.P; \
+	$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(WeightedBlendedOIT_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))))
+	cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).debug.P; \
 	  rm -f $(WeightedBlendedOIT_debug_DEPDIR).d
 
 $(WeightedBlendedOIT_debug_cc_o): $(WeightedBlendedOIT_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(WeightedBlendedOIT_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).debug.P; \
+	$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(WeightedBlendedOIT_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))))
+	cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).debug.P; \
 	  rm -f $(WeightedBlendedOIT_debug_DEPDIR).d
 
 $(WeightedBlendedOIT_debug_c_o): $(WeightedBlendedOIT_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(WeightedBlendedOIT_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).debug.P; \
+	$(ECHO) WeightedBlendedOIT: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(WeightedBlendedOIT_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))))
+	cp $(WeightedBlendedOIT_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_debug_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).debug.P; \
 	  rm -f $(WeightedBlendedOIT_debug_DEPDIR).d
@@ -164,9 +166,11 @@ WeightedBlendedOIT_release_common_cflags    += -MMD
 WeightedBlendedOIT_release_common_cflags    += $(addprefix -D, $(WeightedBlendedOIT_release_defines))
 WeightedBlendedOIT_release_common_cflags    += $(addprefix -I, $(WeightedBlendedOIT_release_hpaths))
 WeightedBlendedOIT_release_cflags	:= $(WeightedBlendedOIT_release_common_cflags)
-WeightedBlendedOIT_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 WeightedBlendedOIT_release_cppflags	:= $(WeightedBlendedOIT_release_common_cflags)
-WeightedBlendedOIT_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+WeightedBlendedOIT_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 WeightedBlendedOIT_release_lflags    := $(WeightedBlendedOIT_custom_lflags)
 WeightedBlendedOIT_release_lflags    += $(addprefix -L, $(WeightedBlendedOIT_release_lpaths))
 WeightedBlendedOIT_release_lflags    += -Wl,--start-group $(addprefix -l, $(WeightedBlendedOIT_release_libraries)) -Wl,--end-group
@@ -179,9 +183,9 @@ WeightedBlendedOIT_release_obj      = $(WeightedBlendedOIT_release_cpp_o) $(Weig
 WeightedBlendedOIT_release_bin      := ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so
 
 clean_WeightedBlendedOIT_release: 
-	$(SILENT_FLAG)$(ECHO) clean WeightedBlendedOIT release
-	$(SILENT_FLAG)$(RMDIR) $(WeightedBlendedOIT_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(WeightedBlendedOIT_release_bin)
+	$(ECHO) clean WeightedBlendedOIT release
+	$(RMDIR) $(WeightedBlendedOIT_release_objsdir)
+	$(RMDIR) $(WeightedBlendedOIT_release_bin)
 
 build_WeightedBlendedOIT_release: postbuild_WeightedBlendedOIT_release
 postbuild_WeightedBlendedOIT_release: mainbuild_WeightedBlendedOIT_release preantbuild_WeightedBlendedOIT_release antbuild_WeightedBlendedOIT_release
@@ -192,40 +196,45 @@ mainbuild_WeightedBlendedOIT_release: prebuild_WeightedBlendedOIT_release $(Weig
 prebuild_WeightedBlendedOIT_release:
 
 $(WeightedBlendedOIT_release_bin): $(WeightedBlendedOIT_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so`
-	$(SILENT_FLAG)$(CXX) -shared $(WeightedBlendedOIT_release_obj) $(WeightedBlendedOIT_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../gl4-kepler/WeightedBlendedOIT/libs/armeabi-v7a/libWeightedBlendedOIT.so`
+	$(CXX) -shared $(WeightedBlendedOIT_release_obj) $(WeightedBlendedOIT_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 WeightedBlendedOIT_release_DEPDIR = $(dir $(@))/$(*F)
 $(WeightedBlendedOIT_release_cpp_o): $(WeightedBlendedOIT_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(WeightedBlendedOIT_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).release.P; \
+	$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(WeightedBlendedOIT_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))))
+	cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cppfiles))))).release.P; \
 	  rm -f $(WeightedBlendedOIT_release_DEPDIR).d
 
 $(WeightedBlendedOIT_release_cc_o): $(WeightedBlendedOIT_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(WeightedBlendedOIT_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).release.P; \
+	$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(WeightedBlendedOIT_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))))
+	cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_ccfiles))))).release.P; \
 	  rm -f $(WeightedBlendedOIT_release_DEPDIR).d
 
 $(WeightedBlendedOIT_release_c_o): $(WeightedBlendedOIT_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(WeightedBlendedOIT_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))))
-	$(SILENT_FLAG)cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).release.P; \
+	$(ECHO) WeightedBlendedOIT: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(WeightedBlendedOIT_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))))
+	cp $(WeightedBlendedOIT_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(WeightedBlendedOIT_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(WeightedBlendedOIT_release_objsdir),, $@))), $(WeightedBlendedOIT_cfiles))))).release.P; \
 	  rm -f $(WeightedBlendedOIT_release_DEPDIR).d
 
 clean_WeightedBlendedOIT:  clean_WeightedBlendedOIT_debug clean_WeightedBlendedOIT_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

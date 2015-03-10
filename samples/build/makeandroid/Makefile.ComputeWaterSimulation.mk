@@ -65,9 +65,11 @@ ComputeWaterSimulation_debug_common_cflags    += -MMD
 ComputeWaterSimulation_debug_common_cflags    += $(addprefix -D, $(ComputeWaterSimulation_debug_defines))
 ComputeWaterSimulation_debug_common_cflags    += $(addprefix -I, $(ComputeWaterSimulation_debug_hpaths))
 ComputeWaterSimulation_debug_cflags	:= $(ComputeWaterSimulation_debug_common_cflags)
-ComputeWaterSimulation_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_debug_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeWaterSimulation_debug_cppflags	:= $(ComputeWaterSimulation_debug_common_cflags)
-ComputeWaterSimulation_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_debug_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ComputeWaterSimulation_debug_lflags    := $(ComputeWaterSimulation_custom_lflags)
 ComputeWaterSimulation_debug_lflags    += $(addprefix -L, $(ComputeWaterSimulation_debug_lpaths))
 ComputeWaterSimulation_debug_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeWaterSimulation_debug_libraries)) -Wl,--end-group
@@ -80,9 +82,9 @@ ComputeWaterSimulation_debug_obj      = $(ComputeWaterSimulation_debug_cpp_o) $(
 ComputeWaterSimulation_debug_bin      := ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so
 
 clean_ComputeWaterSimulation_debug: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeWaterSimulation debug
-	$(SILENT_FLAG)$(RMDIR) $(ComputeWaterSimulation_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeWaterSimulation_debug_bin)
+	$(ECHO) clean ComputeWaterSimulation debug
+	$(RMDIR) $(ComputeWaterSimulation_debug_objsdir)
+	$(RMDIR) $(ComputeWaterSimulation_debug_bin)
 
 build_ComputeWaterSimulation_debug: postbuild_ComputeWaterSimulation_debug
 postbuild_ComputeWaterSimulation_debug: mainbuild_ComputeWaterSimulation_debug preantbuild_ComputeWaterSimulation_debug antbuild_ComputeWaterSimulation_debug
@@ -93,37 +95,37 @@ mainbuild_ComputeWaterSimulation_debug: prebuild_ComputeWaterSimulation_debug $(
 prebuild_ComputeWaterSimulation_debug:
 
 $(ComputeWaterSimulation_debug_bin): $(ComputeWaterSimulation_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvEGLUtil_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug build_R3_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so`
-	$(SILENT_FLAG)$(CXX) -shared $(ComputeWaterSimulation_debug_obj) $(ComputeWaterSimulation_debug_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so`
+	$(CXX) -shared $(ComputeWaterSimulation_debug_obj) $(ComputeWaterSimulation_debug_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 ComputeWaterSimulation_debug_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeWaterSimulation_debug_cpp_o): $(ComputeWaterSimulation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeWaterSimulation_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).debug.P; \
+	$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeWaterSimulation_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))))
+	cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).debug.P; \
 	  rm -f $(ComputeWaterSimulation_debug_DEPDIR).d
 
 $(ComputeWaterSimulation_debug_cc_o): $(ComputeWaterSimulation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeWaterSimulation_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).debug.P; \
+	$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeWaterSimulation_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))))
+	cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).debug.P; \
 	  rm -f $(ComputeWaterSimulation_debug_DEPDIR).d
 
 $(ComputeWaterSimulation_debug_c_o): $(ComputeWaterSimulation_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeWaterSimulation_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).debug.P; \
+	$(ECHO) ComputeWaterSimulation: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeWaterSimulation_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))))
+	cp $(ComputeWaterSimulation_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_debug_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).debug.P; \
 	  rm -f $(ComputeWaterSimulation_debug_DEPDIR).d
@@ -175,9 +177,11 @@ ComputeWaterSimulation_release_common_cflags    += -MMD
 ComputeWaterSimulation_release_common_cflags    += $(addprefix -D, $(ComputeWaterSimulation_release_defines))
 ComputeWaterSimulation_release_common_cflags    += $(addprefix -I, $(ComputeWaterSimulation_release_hpaths))
 ComputeWaterSimulation_release_cflags	:= $(ComputeWaterSimulation_release_common_cflags)
-ComputeWaterSimulation_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_release_cflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeWaterSimulation_release_cppflags	:= $(ComputeWaterSimulation_release_common_cflags)
-ComputeWaterSimulation_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -O2 -g -fomit-frame-pointer -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_release_cppflags  += -fpic -fPIC -ffunction-sections -funwind-tables -fstack-protector -no-canonical-prefixes -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16 -fstrict-aliasing -funswitch-loops -finline-limit=300
+ComputeWaterSimulation_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ComputeWaterSimulation_release_lflags    := $(ComputeWaterSimulation_custom_lflags)
 ComputeWaterSimulation_release_lflags    += $(addprefix -L, $(ComputeWaterSimulation_release_lpaths))
 ComputeWaterSimulation_release_lflags    += -Wl,--start-group $(addprefix -l, $(ComputeWaterSimulation_release_libraries)) -Wl,--end-group
@@ -190,9 +194,9 @@ ComputeWaterSimulation_release_obj      = $(ComputeWaterSimulation_release_cpp_o
 ComputeWaterSimulation_release_bin      := ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so
 
 clean_ComputeWaterSimulation_release: 
-	$(SILENT_FLAG)$(ECHO) clean ComputeWaterSimulation release
-	$(SILENT_FLAG)$(RMDIR) $(ComputeWaterSimulation_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ComputeWaterSimulation_release_bin)
+	$(ECHO) clean ComputeWaterSimulation release
+	$(RMDIR) $(ComputeWaterSimulation_release_objsdir)
+	$(RMDIR) $(ComputeWaterSimulation_release_bin)
 
 build_ComputeWaterSimulation_release: postbuild_ComputeWaterSimulation_release
 postbuild_ComputeWaterSimulation_release: mainbuild_ComputeWaterSimulation_release preantbuild_ComputeWaterSimulation_release antbuild_ComputeWaterSimulation_release
@@ -203,40 +207,45 @@ mainbuild_ComputeWaterSimulation_release: prebuild_ComputeWaterSimulation_releas
 prebuild_ComputeWaterSimulation_release:
 
 $(ComputeWaterSimulation_release_bin): $(ComputeWaterSimulation_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvEGLUtil_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release build_R3_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so`
-	$(SILENT_FLAG)$(CXX) -shared $(ComputeWaterSimulation_release_obj) $(ComputeWaterSimulation_release_lflags) -lc -o $@ 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../es3aep-kepler/ComputeWaterSimulation/libs/armeabi-v7a/libComputeWaterSimulation.so`
+	$(CXX) -shared $(ComputeWaterSimulation_release_obj) $(ComputeWaterSimulation_release_lflags) -lc -o $@ 
+	$(ECHO) building $@ complete!
 
 ComputeWaterSimulation_release_DEPDIR = $(dir $(@))/$(*F)
 $(ComputeWaterSimulation_release_cpp_o): $(ComputeWaterSimulation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeWaterSimulation_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).release.P; \
+	$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeWaterSimulation_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))))
+	cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cppfiles))))).release.P; \
 	  rm -f $(ComputeWaterSimulation_release_DEPDIR).d
 
 $(ComputeWaterSimulation_release_cc_o): $(ComputeWaterSimulation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ComputeWaterSimulation_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).release.P; \
+	$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ComputeWaterSimulation_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))))
+	cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_ccfiles))))).release.P; \
 	  rm -f $(ComputeWaterSimulation_release_DEPDIR).d
 
 $(ComputeWaterSimulation_release_c_o): $(ComputeWaterSimulation_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ComputeWaterSimulation_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))))
-	$(SILENT_FLAG)cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).release.P; \
+	$(ECHO) ComputeWaterSimulation: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ComputeWaterSimulation_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))))
+	cp $(ComputeWaterSimulation_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ComputeWaterSimulation_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ComputeWaterSimulation_release_objsdir),, $@))), $(ComputeWaterSimulation_cfiles))))).release.P; \
 	  rm -f $(ComputeWaterSimulation_release_DEPDIR).d
 
 clean_ComputeWaterSimulation:  clean_ComputeWaterSimulation_debug clean_ComputeWaterSimulation_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

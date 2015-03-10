@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------
 // File:        es2-aurora/OptimizationApp/IceRevisitedRadix.h
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //----------------------------------------------------------------------------------

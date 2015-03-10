@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------------
 // File:        es3-kepler/FXAA/FXAA.cpp
-// SDK Version: v2.0 
+// SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
 //
-// Copyright (c) 2014, NVIDIA CORPORATION. All rights reserved.
+// Copyright (c) 2014-2015, NVIDIA CORPORATION. All rights reserved.
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -46,6 +46,7 @@
 
 const char* model_files[2]={"models/loop","models/triangle"};
 const char* fxaa_quality_frg[4]={"shaders/FXAA_Fastest.frag","shaders/FXAA_Default.frag","shaders/FXAA_High_Quality.frag","shaders/FXAA_Extreme_Quality.frag"};
+const char* fxaa_quality_frg_es[4]={"shaders/FXAA_FastestES.frag","shaders/FXAA_DefaultES.frag","shaders/FXAA_High_QualityES.frag","shaders/FXAA_Extreme_QualityES.frag"};
 
 #define Z_NEAR 0.4f
 #define Z_FAR 100.0f
@@ -214,7 +215,9 @@ void FXAA::initRendering(void) {
     //init shaders
 	m_FXAAProg[0] = NvGLSLProgram::createFromFiles("shaders/Blit.vert", "shaders/Blit.frag");
 	for (i=1;i<5;i++) {
-		m_FXAAProg[i] = NvGLSLProgram::createFromFiles("shaders/FXAA.vert", fxaa_quality_frg[i-1]);
+		m_FXAAProg[i] = NvGLSLProgram::createFromFiles("shaders/FXAA.vert", 
+            (getGLContext()->getConfiguration().apiVer.api == NvGfxAPI::GL)
+            ? fxaa_quality_frg[i-1] : fxaa_quality_frg_es[i-1]);
 	}
 	m_LineProg = NvGLSLProgram::createFromFiles("shaders/DrawLine.vert", "shaders/DrawLine.frag");
 	m_ObjectProg = NvGLSLProgram::createFromFiles("shaders/Object.vert", "shaders/Object.frag");

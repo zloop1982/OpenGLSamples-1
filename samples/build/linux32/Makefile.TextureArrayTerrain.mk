@@ -57,14 +57,14 @@ TextureArrayTerrain_debug_common_cflags    += $(addprefix -D, $(TextureArrayTerr
 TextureArrayTerrain_debug_common_cflags    += $(addprefix -I, $(TextureArrayTerrain_debug_hpaths))
 TextureArrayTerrain_debug_common_cflags  += -m32
 TextureArrayTerrain_debug_cflags	:= $(TextureArrayTerrain_debug_common_cflags)
-TextureArrayTerrain_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+TextureArrayTerrain_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 TextureArrayTerrain_debug_cflags  += -malign-double
-TextureArrayTerrain_debug_cflags  += -g
+TextureArrayTerrain_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 TextureArrayTerrain_debug_cppflags	:= $(TextureArrayTerrain_debug_common_cflags)
-TextureArrayTerrain_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+TextureArrayTerrain_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 TextureArrayTerrain_debug_cppflags  += -Wno-reorder
 TextureArrayTerrain_debug_cppflags  += -malign-double
-TextureArrayTerrain_debug_cppflags  += -g
+TextureArrayTerrain_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 TextureArrayTerrain_debug_lflags    := $(TextureArrayTerrain_custom_lflags)
 TextureArrayTerrain_debug_lflags    += $(addprefix -L, $(TextureArrayTerrain_debug_lpaths))
 TextureArrayTerrain_debug_lflags    += -Wl,--start-group $(addprefix -l, $(TextureArrayTerrain_debug_libraries)) -Wl,--end-group
@@ -78,9 +78,9 @@ TextureArrayTerrain_debug_obj      = $(TextureArrayTerrain_debug_cpp_o) $(Textur
 TextureArrayTerrain_debug_bin      := ./../../bin/linux32/TextureArrayTerrainD
 
 clean_TextureArrayTerrain_debug: 
-	$(SILENT_FLAG)$(ECHO) clean TextureArrayTerrain debug
-	$(SILENT_FLAG)$(RMDIR) $(TextureArrayTerrain_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(TextureArrayTerrain_debug_bin)
+	$(ECHO) clean TextureArrayTerrain debug
+	$(RMDIR) $(TextureArrayTerrain_debug_objsdir)
+	$(RMDIR) $(TextureArrayTerrain_debug_bin)
 
 build_TextureArrayTerrain_debug: postbuild_TextureArrayTerrain_debug
 postbuild_TextureArrayTerrain_debug: mainbuild_TextureArrayTerrain_debug
@@ -88,37 +88,37 @@ mainbuild_TextureArrayTerrain_debug: prebuild_TextureArrayTerrain_debug $(Textur
 prebuild_TextureArrayTerrain_debug:
 
 $(TextureArrayTerrain_debug_bin): $(TextureArrayTerrain_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug build_R3_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/TextureArrayTerrainD`
-	$(SILENT_FLAG)$(CCLD) $(TextureArrayTerrain_debug_obj) $(TextureArrayTerrain_debug_lflags) -o $(TextureArrayTerrain_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/TextureArrayTerrainD`
+	$(CCLD) $(TextureArrayTerrain_debug_obj) $(TextureArrayTerrain_debug_lflags) -o $(TextureArrayTerrain_debug_bin) 
+	$(ECHO) building $@ complete!
 
 TextureArrayTerrain_debug_DEPDIR = $(dir $(@))/$(*F)
 $(TextureArrayTerrain_debug_cpp_o): $(TextureArrayTerrain_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TextureArrayTerrain_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).debug.P; \
+	$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TextureArrayTerrain_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))))
+	cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).debug.P; \
 	  rm -f $(TextureArrayTerrain_debug_DEPDIR).d
 
 $(TextureArrayTerrain_debug_cc_o): $(TextureArrayTerrain_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TextureArrayTerrain_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).debug.P; \
+	$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TextureArrayTerrain_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))))
+	cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).debug.P; \
 	  rm -f $(TextureArrayTerrain_debug_DEPDIR).d
 
 $(TextureArrayTerrain_debug_c_o): $(TextureArrayTerrain_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(TextureArrayTerrain_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).debug.P; \
+	$(ECHO) TextureArrayTerrain: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(TextureArrayTerrain_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))))
+	cp $(TextureArrayTerrain_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_debug_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).debug.P; \
 	  rm -f $(TextureArrayTerrain_debug_DEPDIR).d
@@ -163,14 +163,14 @@ TextureArrayTerrain_release_common_cflags    += $(addprefix -D, $(TextureArrayTe
 TextureArrayTerrain_release_common_cflags    += $(addprefix -I, $(TextureArrayTerrain_release_hpaths))
 TextureArrayTerrain_release_common_cflags  += -m32
 TextureArrayTerrain_release_cflags	:= $(TextureArrayTerrain_release_common_cflags)
-TextureArrayTerrain_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+TextureArrayTerrain_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 TextureArrayTerrain_release_cflags  += -malign-double
-TextureArrayTerrain_release_cflags  += -O2
+TextureArrayTerrain_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 TextureArrayTerrain_release_cppflags	:= $(TextureArrayTerrain_release_common_cflags)
-TextureArrayTerrain_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+TextureArrayTerrain_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 TextureArrayTerrain_release_cppflags  += -Wno-reorder
 TextureArrayTerrain_release_cppflags  += -malign-double
-TextureArrayTerrain_release_cppflags  += -O2
+TextureArrayTerrain_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 TextureArrayTerrain_release_lflags    := $(TextureArrayTerrain_custom_lflags)
 TextureArrayTerrain_release_lflags    += $(addprefix -L, $(TextureArrayTerrain_release_lpaths))
 TextureArrayTerrain_release_lflags    += -Wl,--start-group $(addprefix -l, $(TextureArrayTerrain_release_libraries)) -Wl,--end-group
@@ -184,9 +184,9 @@ TextureArrayTerrain_release_obj      = $(TextureArrayTerrain_release_cpp_o) $(Te
 TextureArrayTerrain_release_bin      := ./../../bin/linux32/TextureArrayTerrain
 
 clean_TextureArrayTerrain_release: 
-	$(SILENT_FLAG)$(ECHO) clean TextureArrayTerrain release
-	$(SILENT_FLAG)$(RMDIR) $(TextureArrayTerrain_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(TextureArrayTerrain_release_bin)
+	$(ECHO) clean TextureArrayTerrain release
+	$(RMDIR) $(TextureArrayTerrain_release_objsdir)
+	$(RMDIR) $(TextureArrayTerrain_release_bin)
 
 build_TextureArrayTerrain_release: postbuild_TextureArrayTerrain_release
 postbuild_TextureArrayTerrain_release: mainbuild_TextureArrayTerrain_release
@@ -194,40 +194,45 @@ mainbuild_TextureArrayTerrain_release: prebuild_TextureArrayTerrain_release $(Te
 prebuild_TextureArrayTerrain_release:
 
 $(TextureArrayTerrain_release_bin): $(TextureArrayTerrain_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release build_R3_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux32/TextureArrayTerrain`
-	$(SILENT_FLAG)$(CCLD) $(TextureArrayTerrain_release_obj) $(TextureArrayTerrain_release_lflags) -o $(TextureArrayTerrain_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux32/TextureArrayTerrain`
+	$(CCLD) $(TextureArrayTerrain_release_obj) $(TextureArrayTerrain_release_lflags) -o $(TextureArrayTerrain_release_bin) 
+	$(ECHO) building $@ complete!
 
 TextureArrayTerrain_release_DEPDIR = $(dir $(@))/$(*F)
 $(TextureArrayTerrain_release_cpp_o): $(TextureArrayTerrain_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TextureArrayTerrain_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).release.P; \
+	$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TextureArrayTerrain_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))))
+	cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cppfiles))))).release.P; \
 	  rm -f $(TextureArrayTerrain_release_DEPDIR).d
 
 $(TextureArrayTerrain_release_cc_o): $(TextureArrayTerrain_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(TextureArrayTerrain_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).release.P; \
+	$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(TextureArrayTerrain_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))))
+	cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_ccfiles))))).release.P; \
 	  rm -f $(TextureArrayTerrain_release_DEPDIR).d
 
 $(TextureArrayTerrain_release_c_o): $(TextureArrayTerrain_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(TextureArrayTerrain_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))))
-	$(SILENT_FLAG)cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).release.P; \
+	$(ECHO) TextureArrayTerrain: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(TextureArrayTerrain_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))))
+	cp $(TextureArrayTerrain_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(TextureArrayTerrain_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(TextureArrayTerrain_release_objsdir),, $@))), $(TextureArrayTerrain_cfiles))))).release.P; \
 	  rm -f $(TextureArrayTerrain_release_DEPDIR).d
 
 clean_TextureArrayTerrain:  clean_TextureArrayTerrain_debug clean_TextureArrayTerrain_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif

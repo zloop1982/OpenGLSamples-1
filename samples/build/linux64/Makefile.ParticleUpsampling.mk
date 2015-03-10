@@ -58,14 +58,14 @@ ParticleUpsampling_debug_common_cflags    += $(addprefix -D, $(ParticleUpsamplin
 ParticleUpsampling_debug_common_cflags    += $(addprefix -I, $(ParticleUpsampling_debug_hpaths))
 ParticleUpsampling_debug_common_cflags  += -m64
 ParticleUpsampling_debug_cflags	:= $(ParticleUpsampling_debug_common_cflags)
-ParticleUpsampling_debug_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ParticleUpsampling_debug_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ParticleUpsampling_debug_cflags  += -malign-double
-ParticleUpsampling_debug_cflags  += -g
+ParticleUpsampling_debug_cflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ParticleUpsampling_debug_cppflags	:= $(ParticleUpsampling_debug_common_cflags)
-ParticleUpsampling_debug_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ParticleUpsampling_debug_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ParticleUpsampling_debug_cppflags  += -Wno-reorder
 ParticleUpsampling_debug_cppflags  += -malign-double
-ParticleUpsampling_debug_cppflags  += -g
+ParticleUpsampling_debug_cppflags  += -funwind-tables -O0 -g -ggdb -fno-omit-frame-pointer
 ParticleUpsampling_debug_lflags    := $(ParticleUpsampling_custom_lflags)
 ParticleUpsampling_debug_lflags    += $(addprefix -L, $(ParticleUpsampling_debug_lpaths))
 ParticleUpsampling_debug_lflags    += -Wl,--start-group $(addprefix -l, $(ParticleUpsampling_debug_libraries)) -Wl,--end-group
@@ -80,9 +80,9 @@ ParticleUpsampling_debug_obj      = $(ParticleUpsampling_debug_cpp_o) $(Particle
 ParticleUpsampling_debug_bin      := ./../../bin/linux64/ParticleUpsamplingD
 
 clean_ParticleUpsampling_debug: 
-	$(SILENT_FLAG)$(ECHO) clean ParticleUpsampling debug
-	$(SILENT_FLAG)$(RMDIR) $(ParticleUpsampling_debug_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ParticleUpsampling_debug_bin)
+	$(ECHO) clean ParticleUpsampling debug
+	$(RMDIR) $(ParticleUpsampling_debug_objsdir)
+	$(RMDIR) $(ParticleUpsampling_debug_bin)
 
 build_ParticleUpsampling_debug: postbuild_ParticleUpsampling_debug
 postbuild_ParticleUpsampling_debug: mainbuild_ParticleUpsampling_debug
@@ -90,37 +90,37 @@ mainbuild_ParticleUpsampling_debug: prebuild_ParticleUpsampling_debug $(Particle
 prebuild_ParticleUpsampling_debug:
 
 $(ParticleUpsampling_debug_bin): $(ParticleUpsampling_debug_obj) build_Half_debug build_NvAppBase_debug build_NvAssetLoader_debug build_NvGamepad_debug build_NvGLUtils_debug build_NvModel_debug build_NvUI_debug 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/ParticleUpsamplingD`
-	$(SILENT_FLAG)$(CCLD) $(ParticleUpsampling_debug_obj) $(ParticleUpsampling_debug_lflags) -o $(ParticleUpsampling_debug_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/ParticleUpsamplingD`
+	$(CCLD) $(ParticleUpsampling_debug_obj) $(ParticleUpsampling_debug_lflags) -o $(ParticleUpsampling_debug_bin) 
+	$(ECHO) building $@ complete!
 
 ParticleUpsampling_debug_DEPDIR = $(dir $(@))/$(*F)
 $(ParticleUpsampling_debug_cpp_o): $(ParticleUpsampling_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ParticleUpsampling_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).debug.P; \
+	$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ParticleUpsampling_debug_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))))
+	cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).debug.P; \
 	  rm -f $(ParticleUpsampling_debug_DEPDIR).d
 
 $(ParticleUpsampling_debug_cc_o): $(ParticleUpsampling_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ParticleUpsampling_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).debug.P; \
+	$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ParticleUpsampling_debug_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))))
+	cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).debug.P; \
 	  rm -f $(ParticleUpsampling_debug_DEPDIR).d
 
 $(ParticleUpsampling_debug_c_o): $(ParticleUpsampling_debug_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ParticleUpsampling_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).debug.P; \
+	$(ECHO) ParticleUpsampling: compiling debug $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ParticleUpsampling_debug_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))))))
+	cp $(ParticleUpsampling_debug_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).debug.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_debug_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_debug_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).debug.P; \
 	  rm -f $(ParticleUpsampling_debug_DEPDIR).d
@@ -165,14 +165,14 @@ ParticleUpsampling_release_common_cflags    += $(addprefix -D, $(ParticleUpsampl
 ParticleUpsampling_release_common_cflags    += $(addprefix -I, $(ParticleUpsampling_release_hpaths))
 ParticleUpsampling_release_common_cflags  += -m64
 ParticleUpsampling_release_cflags	:= $(ParticleUpsampling_release_common_cflags)
-ParticleUpsampling_release_cflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ParticleUpsampling_release_cflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ParticleUpsampling_release_cflags  += -malign-double
-ParticleUpsampling_release_cflags  += -O2
+ParticleUpsampling_release_cflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ParticleUpsampling_release_cppflags	:= $(ParticleUpsampling_release_common_cflags)
-ParticleUpsampling_release_cppflags  += -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
+ParticleUpsampling_release_cppflags  += -funwind-tables -Wall -Wextra -Wno-unused-parameter -Wno-ignored-qualifiers -Wno-unused-but-set-variable -Wno-switch -Wno-unused-variable -Wno-unused-function
 ParticleUpsampling_release_cppflags  += -Wno-reorder
 ParticleUpsampling_release_cppflags  += -malign-double
-ParticleUpsampling_release_cppflags  += -O2
+ParticleUpsampling_release_cppflags  += -funwind-tables -O2 -fno-omit-frame-pointer
 ParticleUpsampling_release_lflags    := $(ParticleUpsampling_custom_lflags)
 ParticleUpsampling_release_lflags    += $(addprefix -L, $(ParticleUpsampling_release_lpaths))
 ParticleUpsampling_release_lflags    += -Wl,--start-group $(addprefix -l, $(ParticleUpsampling_release_libraries)) -Wl,--end-group
@@ -187,9 +187,9 @@ ParticleUpsampling_release_obj      = $(ParticleUpsampling_release_cpp_o) $(Part
 ParticleUpsampling_release_bin      := ./../../bin/linux64/ParticleUpsampling
 
 clean_ParticleUpsampling_release: 
-	$(SILENT_FLAG)$(ECHO) clean ParticleUpsampling release
-	$(SILENT_FLAG)$(RMDIR) $(ParticleUpsampling_release_objsdir)
-	$(SILENT_FLAG)$(RMDIR) $(ParticleUpsampling_release_bin)
+	$(ECHO) clean ParticleUpsampling release
+	$(RMDIR) $(ParticleUpsampling_release_objsdir)
+	$(RMDIR) $(ParticleUpsampling_release_bin)
 
 build_ParticleUpsampling_release: postbuild_ParticleUpsampling_release
 postbuild_ParticleUpsampling_release: mainbuild_ParticleUpsampling_release
@@ -197,40 +197,45 @@ mainbuild_ParticleUpsampling_release: prebuild_ParticleUpsampling_release $(Part
 prebuild_ParticleUpsampling_release:
 
 $(ParticleUpsampling_release_bin): $(ParticleUpsampling_release_obj) build_Half_release build_NvAppBase_release build_NvAssetLoader_release build_NvGamepad_release build_NvGLUtils_release build_NvModel_release build_NvUI_release 
-	$(SILENT_FLAG)mkdir -p `dirname ./../../bin/linux64/ParticleUpsampling`
-	$(SILENT_FLAG)$(CCLD) $(ParticleUpsampling_release_obj) $(ParticleUpsampling_release_lflags) -o $(ParticleUpsampling_release_bin) 
-	$(SILENT_FLAG)$(ECHO) building $@ complete!
+	mkdir -p `dirname ./../../bin/linux64/ParticleUpsampling`
+	$(CCLD) $(ParticleUpsampling_release_obj) $(ParticleUpsampling_release_lflags) -o $(ParticleUpsampling_release_bin) 
+	$(ECHO) building $@ complete!
 
 ParticleUpsampling_release_DEPDIR = $(dir $(@))/$(*F)
 $(ParticleUpsampling_release_cpp_o): $(ParticleUpsampling_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ParticleUpsampling_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).release.P; \
+	$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ParticleUpsampling_release_cppflags) -c $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))))
+	cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cpp.o,.cpp, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cppfiles))))).release.P; \
 	  rm -f $(ParticleUpsampling_release_DEPDIR).d
 
 $(ParticleUpsampling_release_cc_o): $(ParticleUpsampling_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CXX) $(ParticleUpsampling_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles)) -o $@
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).release.P; \
+	$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))...
+	mkdir -p $(dir $(@))
+	$(CXX) $(ParticleUpsampling_release_cppflags) -c $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles)) -o $@
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))))
+	cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .cc.o,.cc, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_ccfiles))))).release.P; \
 	  rm -f $(ParticleUpsampling_release_DEPDIR).d
 
 $(ParticleUpsampling_release_c_o): $(ParticleUpsampling_release_objsdir)/%.o:
-	$(SILENT_FLAG)$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))...
-	$(SILENT_FLAG)mkdir -p $(dir $(@))
-	$(SILENT_FLAG)$(CC) $(ParticleUpsampling_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles)) -o $@ 
-	$(SILENT_FLAG)mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))))))
-	$(SILENT_FLAG)cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).release.P; \
+	$(ECHO) ParticleUpsampling: compiling release $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))...
+	mkdir -p $(dir $(@))
+	$(CC) $(ParticleUpsampling_release_cflags) -c $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles)) -o $@ 
+	mkdir -p $(dir $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))))))
+	cp $(ParticleUpsampling_release_DEPDIR).d $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).release.P; \
 	  sed -e 's/#.*//' -e 's/^[^:]*: *//' -e 's/ *\\$$//' \
 		-e '/^$$/ d' -e 's/$$/ :/' < $(ParticleUpsampling_release_DEPDIR).d >> $(addprefix $(DEPSDIR)/, $(subst ./, , $(subst ../, , $(filter %$(strip $(subst .c.o,.c, $(subst $(ParticleUpsampling_release_objsdir),, $@))), $(ParticleUpsampling_cfiles))))).release.P; \
 	  rm -f $(ParticleUpsampling_release_DEPDIR).d
 
 clean_ParticleUpsampling:  clean_ParticleUpsampling_debug clean_ParticleUpsampling_release
-	$(SILENT_FLAG)rm -rf $(DEPSDIR)
+	rm -rf $(DEPSDIR)
+
+export VERBOSE
+ifndef VERBOSE
+.SILENT:
+endif
