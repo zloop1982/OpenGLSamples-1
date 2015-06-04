@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------
-// File:        es2-aurora/OptimizationApp/SceneRenderer.cpp
+// File:        es2-aurora\OptimizationApp/SceneRenderer.cpp
 // SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
@@ -67,9 +67,9 @@ SceneRenderer::SceneRenderer(bool isES2)
     m_modelStorage["cow"]    = loadModelFromFile("models/cow.obj",    10.0f);
 
     const float treeOffset = 20;
-    NvImage::UpperLeftOrigin(false);
+    NvImage::VerticalFlip(false);
     m_texStorage["palm"]   = NvImage::UploadTextureFromDDSFile("images/palm.dds");
-    NvImage::UpperLeftOrigin(true);
+    NvImage::VerticalFlip(true);
     m_modelStorage["palm"] = loadModelFromFile("models/palm_tree.obj", 50.0f);
 
     // create terrain

@@ -511,7 +511,8 @@ int32_t NvBFInitialize(uint8_t count, const char* filename[][2])
             continue;            
         }
 
-        NvImage::UpperLeftOrigin( false );
+        bool oldFlip = NvImage::GetVerticalFlip();
+        NvImage::VerticalFlip( false );
         if (NvEmbeddedAssetLookup(texFilename, data, len))
         {
             if (data!=NULL && len!=0)
@@ -526,7 +527,7 @@ int32_t NvBFInitialize(uint8_t count, const char* filename[][2])
         }
         if (image==NULL)
             image = NvImage::CreateFromDDSFile(texFilename);
-        NvImage::UpperLeftOrigin( true );
+        NvImage::VerticalFlip( oldFlip );
         if (image==NULL)
         {
             ERROR_LOG("Font [%s] couldn't be loaded by the NVHHDDS library.\n", texFilename);

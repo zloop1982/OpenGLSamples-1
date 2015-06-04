@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------
-// File:        es2-aurora/InstancingApp/InstancingApp.cpp
+// File:        es2-aurora\InstancingApp/InstancingApp.cpp
 // SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
@@ -145,7 +145,7 @@ void InstancingApp::initRendering(void) {
 
     GLuint texID;
 
-    NvImage::UpperLeftOrigin(false);
+    NvImage::VerticalFlip(false);
 
     texID = NvImage::UploadTextureFromDDSFile( "images/rock.dds" );
     if( texID > 0) {
@@ -167,7 +167,7 @@ void InstancingApp::initRendering(void) {
     if( texID > 0)
     configTexture( texID, 3 );
 
-    NvImage::UpperLeftOrigin(false);
+    NvImage::VerticalFlip(false);
 
     glClearColor(0.0, 0.0, 0.0, 1.0);
 

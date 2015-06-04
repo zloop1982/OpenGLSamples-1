@@ -1,5 +1,5 @@
 //----------------------------------------------------------------------------------
-// File:        es2-aurora/OptimizationApp/Terrain.cpp
+// File:        es2-aurora\OptimizationApp/Terrain.cpp
 // SDK Version: v2.11 
 // Email:       gameworks@nvidia.com
 // Site:        http://developer.nvidia.com/
@@ -302,9 +302,9 @@ Terrain::Terrain(const TerrainInput& a_input)
     delete [] indices;    indices    = NULL;
     delete [] heights;    heights    = NULL;
 
-    NvImage::UpperLeftOrigin(false);
+    NvImage::VerticalFlip(false);
     m_colorTex = NvImage::UploadTextureFromDDSFile(a_input.colormap.c_str());
-    NvImage::UpperLeftOrigin(true);
+    NvImage::VerticalFlip(true);
 }
 
 Terrain::~Terrain()

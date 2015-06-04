@@ -249,6 +249,49 @@ const uint32_t DDS10_FORMAT_BC7_TYPELESS = 97;
 const uint32_t DDS10_FORMAT_BC7_UNORM = 98;
 const uint32_t DDS10_FORMAT_BC7_UNORM_SRGB = 99;
 const uint32_t DDS10_FORMAT_FORCE_UINT = 0xffffffffUL;
+// ASTC extension
+const uint32_t DDS10_FORMAT_ASTC_4X4_UNORM              = 134;
+const uint32_t DDS10_FORMAT_ASTC_4X4_UNORM_SRGB         = 135;
+const uint32_t DDS10_FORMAT_ASTC_5X4_TYPELESS           = 137;
+const uint32_t DDS10_FORMAT_ASTC_5X4_UNORM              = 138;
+const uint32_t DDS10_FORMAT_ASTC_5X4_UNORM_SRGB         = 139;
+const uint32_t DDS10_FORMAT_ASTC_5X5_TYPELESS           = 141;
+const uint32_t DDS10_FORMAT_ASTC_5X5_UNORM              = 142;
+const uint32_t DDS10_FORMAT_ASTC_5X5_UNORM_SRGB         = 143;
+const uint32_t DDS10_FORMAT_ASTC_6X5_TYPELESS           = 145;
+const uint32_t DDS10_FORMAT_ASTC_6X5_UNORM              = 146;
+const uint32_t DDS10_FORMAT_ASTC_6X5_UNORM_SRGB         = 147;
+const uint32_t DDS10_FORMAT_ASTC_6X6_TYPELESS           = 149;
+const uint32_t DDS10_FORMAT_ASTC_6X6_UNORM              = 150;
+const uint32_t DDS10_FORMAT_ASTC_6X6_UNORM_SRGB         = 151;
+const uint32_t DDS10_FORMAT_ASTC_8X5_TYPELESS           = 153;
+const uint32_t DDS10_FORMAT_ASTC_8X5_UNORM              = 154;
+const uint32_t DDS10_FORMAT_ASTC_8X5_UNORM_SRGB         = 155;
+const uint32_t DDS10_FORMAT_ASTC_8X6_TYPELESS           = 157;
+const uint32_t DDS10_FORMAT_ASTC_8X6_UNORM              = 158;
+const uint32_t DDS10_FORMAT_ASTC_8X6_UNORM_SRGB         = 159;
+const uint32_t DDS10_FORMAT_ASTC_8X8_TYPELESS           = 161;
+const uint32_t DDS10_FORMAT_ASTC_8X8_UNORM              = 162;
+const uint32_t DDS10_FORMAT_ASTC_8X8_UNORM_SRGB         = 163;
+const uint32_t DDS10_FORMAT_ASTC_10X5_TYPELESS          = 165;
+const uint32_t DDS10_FORMAT_ASTC_10X5_UNORM             = 166;
+const uint32_t DDS10_FORMAT_ASTC_10X5_UNORM_SRGB        = 167;
+const uint32_t DDS10_FORMAT_ASTC_10X6_TYPELESS          = 169;
+const uint32_t DDS10_FORMAT_ASTC_10X6_UNORM             = 170;
+const uint32_t DDS10_FORMAT_ASTC_10X6_UNORM_SRGB        = 171;
+const uint32_t DDS10_FORMAT_ASTC_10X8_TYPELESS          = 173;
+const uint32_t DDS10_FORMAT_ASTC_10X8_UNORM             = 174;
+const uint32_t DDS10_FORMAT_ASTC_10X8_UNORM_SRGB        = 175;
+const uint32_t DDS10_FORMAT_ASTC_10X10_TYPELESS         = 177;
+const uint32_t DDS10_FORMAT_ASTC_10X10_UNORM            = 178;
+const uint32_t DDS10_FORMAT_ASTC_10X10_UNORM_SRGB       = 179;
+const uint32_t DDS10_FORMAT_ASTC_12X10_TYPELESS         = 181;
+const uint32_t DDS10_FORMAT_ASTC_12X10_UNORM            = 182;
+const uint32_t DDS10_FORMAT_ASTC_12X10_UNORM_SRGB       = 183;
+const uint32_t DDS10_FORMAT_ASTC_12X12_TYPELESS         = 185;
+const uint32_t DDS10_FORMAT_ASTC_12X12_UNORM            = 186;
+const uint32_t DDS10_FORMAT_ASTC_12X12_UNORM_SRGB       = 187;
+
 
 
 //DDS 10 resource dimension enums
@@ -360,6 +403,9 @@ bool TranslateDX10Format( const void *ptr, NvImage &i, int32_t &bytesPerElement,
     bytesPerElement = size; \
     btcCompressed = true;
 
+	i._blockSize_x=4;
+	i._blockSize_y=4;
+	
     switch (header.dxgiFormat) {
         case DDS10_FORMAT_R32G32B32A32_FLOAT:
             SET_TYPE_INFO( GL_RGBA32F, GL_RGBA, GL_FLOAT, 16);
@@ -633,6 +679,140 @@ bool TranslateDX10Format( const void *ptr, NvImage &i, int32_t &bytesPerElement,
         case DDS10_FORMAT_B8G8R8X8_UNORM_SRGB:
             SET_TYPE_INFO( GL_SRGB8, GL_BGRA, GL_UNSIGNED_BYTE, 4);
             break;
+		case DDS10_FORMAT_ASTC_4X4_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_4x4_KHR,GL_COMPRESSED_RGBA_ASTC_4x4_KHR,GL_UNSIGNED_BYTE,16);
+			break;
+		case DDS10_FORMAT_ASTC_4X4_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR,GL_UNSIGNED_BYTE,16);
+			break;
+		case DDS10_FORMAT_ASTC_5X4_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_5x4_KHR,GL_COMPRESSED_RGBA_ASTC_5x4_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=5;
+			break;
+		case DDS10_FORMAT_ASTC_5X4_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=5;
+			break;
+		case DDS10_FORMAT_ASTC_5X5_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_5x5_KHR,GL_COMPRESSED_RGBA_ASTC_5x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=5;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_5X5_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_5x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=5;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_6X5_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_6x5_KHR,GL_COMPRESSED_RGBA_ASTC_6x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=6;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_6X5_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=6;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_6X6_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_6x6_KHR,GL_COMPRESSED_RGBA_ASTC_6x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=6;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_6X6_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_6x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=6;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_8X5_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_8x5_KHR,GL_COMPRESSED_RGBA_ASTC_8x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_8X5_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_8X6_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_8x6_KHR,GL_COMPRESSED_RGBA_ASTC_8x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_8X6_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_8X8_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_8x8_KHR,GL_COMPRESSED_RGBA_ASTC_8x8_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=8;
+			break;
+		case DDS10_FORMAT_ASTC_8X8_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_8x8_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=8;
+			i._blockSize_y=8;
+			break;
+		case DDS10_FORMAT_ASTC_10X5_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_10x5_KHR,GL_COMPRESSED_RGBA_ASTC_10x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_10X5_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x5_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=5;
+			break;
+		case DDS10_FORMAT_ASTC_10X6_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_10x6_KHR,GL_COMPRESSED_RGBA_ASTC_10x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_10X6_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x6_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=6;
+			break;
+		case DDS10_FORMAT_ASTC_10X8_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_10x8_KHR,GL_COMPRESSED_RGBA_ASTC_10x8_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=8;
+			break;
+		case DDS10_FORMAT_ASTC_10X8_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x8_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=8;
+			break;
+		case DDS10_FORMAT_ASTC_10X10_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_10x10_KHR,GL_COMPRESSED_RGBA_ASTC_10x10_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=10;
+			break;
+		case DDS10_FORMAT_ASTC_10X10_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_10x10_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=10;
+			i._blockSize_y=10;
+			break;
+		case DDS10_FORMAT_ASTC_12X10_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_12x10_KHR,GL_COMPRESSED_RGBA_ASTC_12x10_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=12;
+			i._blockSize_y=10;
+			break;
+		case DDS10_FORMAT_ASTC_12X10_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x10_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=12;
+			i._blockSize_y=10;
+			break;
+		case DDS10_FORMAT_ASTC_12X12_UNORM:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_RGBA_ASTC_12x12_KHR,GL_COMPRESSED_RGBA_ASTC_12x12_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=12;
+			i._blockSize_y=12;
+			break;
+		case DDS10_FORMAT_ASTC_12X12_UNORM_SRGB:
+			SET_COMPRESSED_TYPE_INFO(GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,GL_COMPRESSED_SRGB8_ALPHA8_ASTC_12x12_KHR,GL_UNSIGNED_BYTE,16);
+			i._blockSize_x=12;
+			i._blockSize_y=12;
+			break;
 
         case DDS10_FORMAT_R32G32B32A32_TYPELESS:
         case DDS10_FORMAT_R32G32B32_TYPELESS:
@@ -652,6 +832,19 @@ bool TranslateDX10Format( const void *ptr, NvImage &i, int32_t &bytesPerElement,
         case DDS10_FORMAT_BC5_TYPELESS:
         case DDS10_FORMAT_B8G8R8A8_TYPELESS:
         case DDS10_FORMAT_B8G8R8X8_TYPELESS:
+		case DDS10_FORMAT_ASTC_5X4_TYPELESS:
+		case DDS10_FORMAT_ASTC_5X5_TYPELESS:
+		case DDS10_FORMAT_ASTC_6X5_TYPELESS:
+		case DDS10_FORMAT_ASTC_6X6_TYPELESS:
+		case DDS10_FORMAT_ASTC_8X5_TYPELESS:
+		case DDS10_FORMAT_ASTC_8X6_TYPELESS:
+		case DDS10_FORMAT_ASTC_8X8_TYPELESS:
+		case DDS10_FORMAT_ASTC_10X5_TYPELESS:
+		case DDS10_FORMAT_ASTC_10X6_TYPELESS:
+		case DDS10_FORMAT_ASTC_10X8_TYPELESS:
+		case DDS10_FORMAT_ASTC_10X10_TYPELESS:
+		case DDS10_FORMAT_ASTC_12X10_TYPELESS:
+		case DDS10_FORMAT_ASTC_12X12_TYPELESS:
             //unclear what to do with typeless formats, leave them as unsupported for now
             // in the future it might make sense to use a default type, if these are common
             return false;
@@ -1149,6 +1342,15 @@ bool NvImage::readDDS(const uint8_t* data, size_t length, NvImage& i) {
         return false;
     }
 
+	/// Flip not allowed for ASTC
+	if (NvImage::vertFlip && 
+		( (i._internalFormat>=0x93B0 && i._internalFormat<=0x93BD)
+		|| (i._internalFormat>=0x93D0 && i._internalFormat<=0x93DD)))
+	{
+		delete fp;
+		return false;
+	}
+
     i._elementSize = bytesPerElement;
 
     i._data.clear();
@@ -1164,16 +1366,16 @@ bool NvImage::readDDS(const uint8_t* data, size_t length, NvImage& i) {
     for (int32_t face = 0; face < i._layers; face++) {
         int32_t w = i._width, h = i._height, d = (i._depth) ? i._depth : 1;
         for (int32_t level = 0; level < i._levelCount; level++) {
-            int32_t bw = (btcCompressed) ? (w+3)/4 : w;
-            int32_t bh = (btcCompressed) ? (h+3)/4 : h;
+			int32_t bw = (btcCompressed) ? (w-1)/i._blockSize_x+1 : w;
+			int32_t bh = (btcCompressed) ? (h-1)/i._blockSize_y+1 : h;
             int32_t size = bw*bh*d*bytesPerElement;
 
             uint8_t *pixels = new uint8_t[size];
 
             //fread( data, size, 1, fp);
             fp->Read( size, pixels);
-
-            if ( NvImage::upperLeftOrigin && !i._cubeMap)
+			
+            if ( NvImage::vertFlip && !i._cubeMap)
                 i.flipSurface( pixels, w, h, d);
 
             if (isES)

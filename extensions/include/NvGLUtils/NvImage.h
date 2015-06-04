@@ -53,14 +53,24 @@ class NvImage;
 class NvImage {
 public:
 
-    /// Sets the image origin to top or bottom.
-    /// Sets the origin to be assumed when loading image data from file or data block
+    /// Sets whether to flip the image vertically.
     /// By default, the image library places the origin of images at the
     /// lower-left corner, to make it map exactly to OpenGL screen coords.
-    /// This flips the image, and it might make it incompatible with
-    /// the texture coordinate conventions of an imported model.
-    /// \param[in] ul true if the origin is in the upper left (D3D/DDS) or bottom-left (GL)
-    static void UpperLeftOrigin( bool ul);
+    /// This might make it incompatible with the texture coordinate conventions 
+	/// of an imported model that places its origin at the upper-left corner (D3D/DDS).
+	/// In that case, doing a flip during loading could be desirable.
+	/// Note: for ASTC textures, flip is not supported and "VerticalFlip(false)" is required.
+    /// \param[in] flip true if flip is required.
+    static void VerticalFlip( bool flip);
+
+    /// Returns whether the loader will flip the image vertically.
+    /// By default, the image library places the origin of images at the
+    /// lower-left corner, to make it map exactly to OpenGL screen coords.
+    /// This might make it incompatible with the texture coordinate conventions 
+	/// of an imported model that places its origin at the upper-left corner (D3D/DDS).
+	/// In that case, doing a flip during loading could be desirable.
+    /// \return true if flip is enabled.
+    static bool GetVerticalFlip() { return vertFlip; }
 
     /// Create a new GL texture and upload the given image to it
     /// \param[in] image the image to load
@@ -225,6 +235,9 @@ protected:
     uint32_t _internalFormat;
     uint32_t _type;
     int32_t _elementSize;
+	int32_t _blockSize_x;
+	int32_t _blockSize_y;
+
     bool _cubeMap;
 
     //pointers to the levels
@@ -246,7 +259,7 @@ protected:
     };
 
     static FormatInfo formatTable[]; 
-    static bool upperLeftOrigin;
+    static bool vertFlip;
     static bool m_expandDXT;
 
     static bool readDDS(const uint8_t* fileData, size_t size, NvImage& i);
