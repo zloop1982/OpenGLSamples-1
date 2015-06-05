@@ -7,6 +7,11 @@ Advanced OpenGL features such as Tessellation Shaders, Geometry Shaders, Compute
 
 The samples also include source for a simple cross-platform application framework which forms the basis of all of the samples.  This framework supports GL window and context management, platform-independent main event loop, handling of input devices including game controllers, asset/file reading, texture/model loading, and other GL utilities.
 
+Important GitHub Note:
+----------------------
+
+As of 5 June, 2015, NVIDIA DevTech has begun to allow the pushing of some significant changes to the GitHub tree that are not yet reflected in the Android Works release or the developer website zips.  This is intentional, and allows NVIDIA to ship new features out-of-band from the major releases.  The intention is that GitHub will always be at or ahead of the other release methods.  This should also make it easier for us to take pull requests.
+
 What to Read Next:
 ------------------
 * [Release Notes](http://docs.nvidia.com/gameworks/index.html#gameworkslibrary/graphicssamples/opengl_samples/gl_release.htm)
